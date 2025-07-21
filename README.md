@@ -162,17 +162,24 @@ Historical trade P&L is calculated and visualized to evaluate the performance of
 ---
 ## Files Overview
 ```
-├── app.py                         # Main Flask application with signal generation and analysis logic
-├── data/                          # Directory to store user-uploaded data files
-│   ├── correlated_pairs.csv       # List of correlated stock pairs
-│   ├── final_results.csv          # Backtesting results for all pairs
-│   ├── correlated_pairs_by_sector.csv
-│   └── correlated_pairs_by_sector_backtest_results.csv
-├── templates/                     # HTML templates for the web interface
-│   ├── index.html                 # Home page for uploading files and viewing signals
-│   └── analysis.html              # Pair-wise P&L and backtest analysis page
-├── requirements.txt               # Python dependencies
-└── README.md                      # Project documentation
+
+.
+├── main.py                                   # Main script for running strategy analysis
+├── Pair_Trading_Correlated_Pairs_Generation.ipynb   # Notebook to generate correlated pairs
+├── Fully_Optimized_Pairs_Trading_Backtester.ipynb   # Notebook to perform backtesting 
+├── data/                                     # Directory for storing datasets
+│   ├── correlated_pairs.csv                  # Correlated pairs (1st July 2023 - 1st July 2024)
+│   ├── final_results.csv                     # Backtest results (1st July 2024 - 1st July 2025)
+│   ├── correlated_pairs_by_sector.csv        # Sector-wise correlated pairs
+│   └── correlated_pairs_by_sector_backtest_results.csv  # Backtest results for sector-wise pairs
+├── templates/                                # HTML templates for the web interface
+│   ├── index.html                            # Home page
+│   ├── analysis.html                         # P&L and backtest analysis page
+│   └── layout.html                           # Base layout template
+├── requirements.txt                          # Python dependencies
+├── LICENSE                                   # MIT License file
+└── README.md                                 # Project documentation
+
 ```
 
 ---
