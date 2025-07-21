@@ -33,7 +33,7 @@ This project can serve as a foundation for building **quantitative trading syste
 
 The datasets used in this project are generated through two key stages:
 
-1. **Correlated Pairs Identification (1st July 2023 to 1st July 2024):**  
+1. **Correlated Pairs Identification (Time period (1 Year): 1st July 2023 to 1st July 2024):**  
    - **`correlated_pairs.csv`** – Contains stock pairs identified as highly correlated based on historical price data.
    - **`correlated_pairs_by_sector.csv`** – Contains correlated stock pairs filtered within the same sector.
 
