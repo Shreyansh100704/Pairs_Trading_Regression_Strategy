@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Pairs Trading Dashboard{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    @import url('https://rsms.me/inter/inter.css');
+    .loader {
+      border:4px solid #f3f3f3;
+      border-top:4px solid #3498db;
+      border-radius:50%;
+      width:40px; height:40px;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <div class="container mx-auto p-4 sm:p-8">
+    <header class="mb-8 pb-4 border-b border-gray-200 text-center">
+      <h1 class="text-4xl font-bold text-gray-900">Pairs Trading Dashboard</h1>
+      <p class="text-lg text-gray-600">Live Signals & Historical Analysis</p>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="space-y-2 mb-6">
+        {% for category, msg in messages %}
+          <div class="p-3 rounded text-white
+            {% if category=='success' %}bg-green-600
+            {% elif category=='error' %}bg-red-600
+            {% elif category=='warning' %}bg-yellow-500
+            {% else %}bg-gray-600{% endif %}">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% endwith %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center mt-12 text-sm text-gray-500">
+      <p>Pairs Trading Analysis Tool</p>
+    </footer>
+  </div>
+</body>
+</html>
