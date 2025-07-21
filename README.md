@@ -25,6 +25,30 @@ This project implements a **statistical arbitrage trading strategy** known as **
 
 This project can serve as a foundation for building **quantitative trading systems**, **algorithmic trading bots**, or as a research tool for **statistical arbitrage strategies**.
 
+
+
+---
+
+## Data Generation
+
+The datasets used in this project are generated through two key stages:
+
+1. **Correlated Pairs Identification (1st July 2023 to 1st July 2024):**  
+   - **`correlated_pairs.csv`** – Contains stock pairs identified as highly correlated based on historical price data.
+   - **`correlated_pairs_by_sector.csv`** – Contains correlated stock pairs filtered within the same sector.
+
+   These files are generated using the **`Pair_Trading_Correlated_Pairs_Generation.ipynb`** notebook.
+
+2. **Backtesting on Subsequent Data (1st July 2024 to 1st July 2025):**  
+   - **`final_results.csv`** – Contains backtest results for all correlated pairs.
+   - **`correlated_pairs_by_sector_backtest_results.csv`** – Contains backtest results for sector-wise correlated pairs.
+
+   These backtesting results are produced using the **`Fully_Optimized_Pairs_Trading_Backtester.ipynb`** notebook.
+
+Additionally, you can **upload your own datasets** under the **uploads section** after running the notebooks for custom analysis.
+
+
+
 ---
 
 ## Setup Instructions
