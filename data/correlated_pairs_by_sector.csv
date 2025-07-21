@@ -1,0 +1,376 @@
+Sector,Stock_Y,Stock_X,Correlation,Sign
+Basic Materials,ACC.NS,AMBUJACEM.NS,0.8217,positive
+Basic Materials,ACC.NS,HINDCOPPER.NS,0.7817,positive
+Basic Materials,ACC.NS,SAIL.NS,0.7645,positive
+Basic Materials,AMBUJACEM.NS,HINDCOPPER.NS,0.9059,positive
+Basic Materials,AMBUJACEM.NS,JINDALSTEL.NS,0.8303,positive
+Basic Materials,AMBUJACEM.NS,NMDC.NS,0.8633,positive
+Basic Materials,AMBUJACEM.NS,SAIL.NS,0.9161,positive
+Basic Materials,GRASIM.NS,HINDALCO.NS,0.9056,positive
+Basic Materials,GRASIM.NS,JINDALSTEL.NS,0.8814,positive
+Basic Materials,GRASIM.NS,NATIONALUM.NS,0.8574,positive
+Basic Materials,GRASIM.NS,VEDL.NS,0.9088,positive
+Basic Materials,HINDALCO.NS,HINDCOPPER.NS,0.7794,positive
+Basic Materials,HINDALCO.NS,JINDALSTEL.NS,0.9165,positive
+Basic Materials,HINDALCO.NS,NATIONALUM.NS,0.8664,positive
+Basic Materials,HINDALCO.NS,NMDC.NS,0.8133,positive
+Basic Materials,HINDALCO.NS,VEDL.NS,0.8913,positive
+Basic Materials,JINDALSTEL.NS,HINDCOPPER.NS,0.827,positive
+Basic Materials,JINDALSTEL.NS,NATIONALUM.NS,0.8579,positive
+Basic Materials,JINDALSTEL.NS,NMDC.NS,0.8317,positive
+Basic Materials,JINDALSTEL.NS,SAIL.NS,0.8185,positive
+Basic Materials,JINDALSTEL.NS,VEDL.NS,0.8829,positive
+Basic Materials,JSWSTEEL.NS,GRASIM.NS,0.8779,positive
+Basic Materials,JSWSTEEL.NS,HINDALCO.NS,0.847,positive
+Basic Materials,JSWSTEEL.NS,JINDALSTEL.NS,0.7694,positive
+Basic Materials,JSWSTEEL.NS,NATIONALUM.NS,0.811,positive
+Basic Materials,JSWSTEEL.NS,ULTRACEMCO.NS,0.8796,positive
+Basic Materials,JSWSTEEL.NS,VEDL.NS,0.9131,positive
+Basic Materials,NATIONALUM.NS,VEDL.NS,0.914,positive
+Basic Materials,NMDC.NS,HINDCOPPER.NS,0.9145,positive
+Basic Materials,NMDC.NS,NATIONALUM.NS,0.7652,positive
+Basic Materials,PIDILITIND.NS,AMBUJACEM.NS,0.8133,positive
+Basic Materials,PIDILITIND.NS,GRASIM.NS,0.8995,positive
+Basic Materials,PIDILITIND.NS,HINDALCO.NS,0.8529,positive
+Basic Materials,PIDILITIND.NS,HINDCOPPER.NS,0.7631,positive
+Basic Materials,PIDILITIND.NS,JINDALSTEL.NS,0.8993,positive
+Basic Materials,PIDILITIND.NS,JSWSTEEL.NS,0.7601,positive
+Basic Materials,PIDILITIND.NS,NATIONALUM.NS,0.8184,positive
+Basic Materials,PIDILITIND.NS,TATASTEEL.NS,0.797,positive
+Basic Materials,PIDILITIND.NS,ULTRACEMCO.NS,0.8389,positive
+Basic Materials,PIDILITIND.NS,VEDL.NS,0.8515,positive
+Basic Materials,SAIL.NS,HINDCOPPER.NS,0.941,positive
+Basic Materials,SAIL.NS,NMDC.NS,0.896,positive
+Basic Materials,TATASTEEL.NS,AMBUJACEM.NS,0.8652,positive
+Basic Materials,TATASTEEL.NS,GRASIM.NS,0.7581,positive
+Basic Materials,TATASTEEL.NS,HINDALCO.NS,0.841,positive
+Basic Materials,TATASTEEL.NS,HINDCOPPER.NS,0.8587,positive
+Basic Materials,TATASTEEL.NS,JINDALSTEL.NS,0.9054,positive
+Basic Materials,TATASTEEL.NS,NMDC.NS,0.8752,positive
+Basic Materials,TATASTEEL.NS,SAIL.NS,0.9135,positive
+Basic Materials,ULTRACEMCO.NS,GRASIM.NS,0.9485,positive
+Basic Materials,ULTRACEMCO.NS,HINDALCO.NS,0.8535,positive
+Basic Materials,ULTRACEMCO.NS,INDIACEM.NS,0.7611,positive
+Basic Materials,ULTRACEMCO.NS,JINDALSTEL.NS,0.8106,positive
+Basic Materials,ULTRACEMCO.NS,NATIONALUM.NS,0.841,positive
+Basic Materials,ULTRACEMCO.NS,VEDL.NS,0.884,positive
+Basic Materials,UPL.NS,NAVINFLUOR.NS,0.8175,positive
+Communication Services,BHARTIARTL.NS,INDUSTOWER.NS,0.8948,positive
+Communication Services,BHARTIARTL.NS,ZEEL.NS,-0.8683,negative
+Communication Services,INDIAMART.NS,PVRINOX.NS,0.7666,positive
+Communication Services,INDUSTOWER.NS,ZEEL.NS,-0.844,negative
+Communication Services,NAUKRI.NS,BHARTIARTL.NS,0.8999,positive
+Communication Services,NAUKRI.NS,INDUSTOWER.NS,0.8617,positive
+Communication Services,NAUKRI.NS,ZEEL.NS,-0.8213,negative
+Consumer Cyclical,BAJAJ-AUTO.NS,EXIDEIND.NS,0.8633,positive
+Consumer Cyclical,BAJAJ-AUTO.NS,M&M.NS,0.7931,positive
+Consumer Cyclical,BAJAJ-AUTO.NS,MOTHERSON.NS,0.89,positive
+Consumer Cyclical,BAJAJ-AUTO.NS,TRENT.NS,0.9089,positive
+Consumer Cyclical,BAJAJ-AUTO.NS,VOLTAS.NS,0.9022,positive
+Consumer Cyclical,BALKRISIND.NS,BHARATFORG.NS,0.8235,positive
+Consumer Cyclical,BALKRISIND.NS,EXIDEIND.NS,0.8,positive
+Consumer Cyclical,BALKRISIND.NS,MOTHERSON.NS,0.7893,positive
+Consumer Cyclical,BHARATFORG.NS,BAJAJ-AUTO.NS,0.7892,positive
+Consumer Cyclical,BHARATFORG.NS,BOSCHLTD.NS,0.7609,positive
+Consumer Cyclical,BHARATFORG.NS,EXIDEIND.NS,0.9148,positive
+Consumer Cyclical,BHARATFORG.NS,HEROMOTOCO.NS,0.896,positive
+Consumer Cyclical,BHARATFORG.NS,MOTHERSON.NS,0.8622,positive
+Consumer Cyclical,BHARATFORG.NS,TATAMOTORS.NS,0.7728,positive
+Consumer Cyclical,BOSCHLTD.NS,BAJAJ-AUTO.NS,0.9404,positive
+Consumer Cyclical,BOSCHLTD.NS,EXIDEIND.NS,0.8699,positive
+Consumer Cyclical,BOSCHLTD.NS,INDHOTEL.NS,0.7791,positive
+Consumer Cyclical,BOSCHLTD.NS,M&M.NS,0.869,positive
+Consumer Cyclical,BOSCHLTD.NS,MOTHERSON.NS,0.9052,positive
+Consumer Cyclical,BOSCHLTD.NS,TRENT.NS,0.9386,positive
+Consumer Cyclical,BOSCHLTD.NS,VOLTAS.NS,0.9184,positive
+Consumer Cyclical,EICHERMOT.NS,BOSCHLTD.NS,0.7629,positive
+Consumer Cyclical,EICHERMOT.NS,INDHOTEL.NS,0.9109,positive
+Consumer Cyclical,EICHERMOT.NS,M&M.NS,0.9307,positive
+Consumer Cyclical,EICHERMOT.NS,TRENT.NS,0.8286,positive
+Consumer Cyclical,EICHERMOT.NS,TVSMOTOR.NS,0.9072,positive
+Consumer Cyclical,EXIDEIND.NS,M&M.NS,0.7541,positive
+Consumer Cyclical,EXIDEIND.NS,MOTHERSON.NS,0.9144,positive
+Consumer Cyclical,EXIDEIND.NS,TRENT.NS,0.7993,positive
+Consumer Cyclical,EXIDEIND.NS,VOLTAS.NS,0.8434,positive
+Consumer Cyclical,HEROMOTOCO.NS,BAJAJ-AUTO.NS,0.9279,positive
+Consumer Cyclical,HEROMOTOCO.NS,BOSCHLTD.NS,0.8541,positive
+Consumer Cyclical,HEROMOTOCO.NS,EXIDEIND.NS,0.889,positive
+Consumer Cyclical,HEROMOTOCO.NS,MOTHERSON.NS,0.8598,positive
+Consumer Cyclical,HEROMOTOCO.NS,TRENT.NS,0.7613,positive
+Consumer Cyclical,HEROMOTOCO.NS,TVSMOTOR.NS,0.7508,positive
+Consumer Cyclical,HEROMOTOCO.NS,VOLTAS.NS,0.7749,positive
+Consumer Cyclical,INDHOTEL.NS,M&M.NS,0.9124,positive
+Consumer Cyclical,INDHOTEL.NS,TRENT.NS,0.8525,positive
+Consumer Cyclical,INDHOTEL.NS,VOLTAS.NS,0.782,positive
+Consumer Cyclical,JUBLFOOD.NS,EICHERMOT.NS,0.7894,positive
+Consumer Cyclical,JUBLFOOD.NS,INDHOTEL.NS,0.803,positive
+Consumer Cyclical,JUBLFOOD.NS,M&M.NS,0.791,positive
+Consumer Cyclical,M&M.NS,MOTHERSON.NS,0.8238,positive
+Consumer Cyclical,M&M.NS,TRENT.NS,0.919,positive
+Consumer Cyclical,MARUTI.NS,BAJAJ-AUTO.NS,0.8129,positive
+Consumer Cyclical,MARUTI.NS,BOSCHLTD.NS,0.785,positive
+Consumer Cyclical,MARUTI.NS,EICHERMOT.NS,0.7853,positive
+Consumer Cyclical,MARUTI.NS,M&M.NS,0.781,positive
+Consumer Cyclical,MARUTI.NS,TVSMOTOR.NS,0.8083,positive
+Consumer Cyclical,MOTHERSON.NS,TRENT.NS,0.895,positive
+Consumer Cyclical,PAGEIND.NS,INDHOTEL.NS,0.7857,positive
+Consumer Cyclical,PAGEIND.NS,JUBLFOOD.NS,0.9021,positive
+Consumer Cyclical,PAGEIND.NS,M&M.NS,0.7734,positive
+Consumer Cyclical,TATAMOTORS.NS,HEROMOTOCO.NS,0.8527,positive
+Consumer Cyclical,TITAN.NS,MRF.NS,0.7741,positive
+Consumer Cyclical,TVSMOTOR.NS,BAJAJ-AUTO.NS,0.8699,positive
+Consumer Cyclical,TVSMOTOR.NS,BOSCHLTD.NS,0.8668,positive
+Consumer Cyclical,TVSMOTOR.NS,INDHOTEL.NS,0.8464,positive
+Consumer Cyclical,TVSMOTOR.NS,M&M.NS,0.9024,positive
+Consumer Cyclical,TVSMOTOR.NS,MOTHERSON.NS,0.8018,positive
+Consumer Cyclical,TVSMOTOR.NS,TRENT.NS,0.9051,positive
+Consumer Cyclical,TVSMOTOR.NS,VOLTAS.NS,0.8073,positive
+Consumer Cyclical,VOLTAS.NS,M&M.NS,0.8563,positive
+Consumer Cyclical,VOLTAS.NS,MOTHERSON.NS,0.8989,positive
+Consumer Cyclical,VOLTAS.NS,TRENT.NS,0.9604,positive
+Consumer Defensive,BRITANNIA.NS,COLPAL.NS,0.7851,positive
+Consumer Defensive,BRITANNIA.NS,GODREJCP.NS,0.8381,positive
+Consumer Defensive,GODREJCP.NS,COLPAL.NS,0.8579,positive
+Consumer Defensive,HINDUNILVR.NS,DABUR.NS,0.8264,positive
+Consumer Defensive,ITC.NS,HINDUNILVR.NS,0.804,positive
+Consumer Defensive,MARICO.NS,BALRAMCHIN.NS,0.8124,positive
+Consumer Defensive,NESTLEIND.NS,TATACONSUM.NS,0.7876,positive
+Consumer Defensive,TATACONSUM.NS,GODREJCP.NS,0.832,positive
+Consumer Defensive,UBL.NS,COLPAL.NS,0.7543,positive
+Consumer Defensive,UBL.NS,MARICO.NS,0.8035,positive
+Energy,BPCL.NS,HINDPETRO.NS,0.9628,positive
+Energy,COALINDIA.NS,BPCL.NS,0.9262,positive
+Energy,COALINDIA.NS,HINDPETRO.NS,0.8553,positive
+Energy,COALINDIA.NS,IOC.NS,0.9456,positive
+Energy,IOC.NS,BPCL.NS,0.9175,positive
+Energy,IOC.NS,HINDPETRO.NS,0.819,positive
+Energy,ONGC.NS,BPCL.NS,0.9263,positive
+Energy,ONGC.NS,COALINDIA.NS,0.9558,positive
+Energy,ONGC.NS,HINDPETRO.NS,0.8634,positive
+Energy,ONGC.NS,IOC.NS,0.9292,positive
+Energy,PETRONET.NS,BPCL.NS,0.8928,positive
+Energy,PETRONET.NS,COALINDIA.NS,0.8338,positive
+Energy,PETRONET.NS,HINDPETRO.NS,0.9088,positive
+Energy,PETRONET.NS,IOC.NS,0.7649,positive
+Energy,PETRONET.NS,ONGC.NS,0.8983,positive
+Energy,RELIANCE.NS,ADANIENT.NS,0.7681,positive
+Energy,RELIANCE.NS,IOC.NS,0.8597,positive
+Energy,RELIANCE.NS,ONGC.NS,0.7604,positive
+Financial Services,AXISBANK.NS,IEX.NS,0.7524,positive
+Financial Services,AXISBANK.NS,SBIN.NS,0.7698,positive
+Financial Services,BAJAJFINSV.NS,BAJFINANCE.NS,0.8068,positive
+Financial Services,BAJAJFINSV.NS,CHOLAFIN.NS,0.8269,positive
+Financial Services,BAJAJFINSV.NS,ICICIBANK.NS,0.762,positive
+Financial Services,BAJAJFINSV.NS,MFSL.NS,0.7821,positive
+Financial Services,BAJAJFINSV.NS,MUTHOOTFIN.NS,0.7577,positive
+Financial Services,BANDHANBNK.NS,INDUSINDBK.NS,0.7571,positive
+Financial Services,BANDHANBNK.NS,MUTHOOTFIN.NS,-0.789,negative
+Financial Services,BANKBARODA.NS,LICI.NS,0.8856,positive
+Financial Services,BANKBARODA.NS,PNB.NS,0.9284,positive
+Financial Services,BANKBARODA.NS,RECLTD.NS,0.7963,positive
+Financial Services,BANKBARODA.NS,SBIN.NS,0.85,positive
+Financial Services,CHOLAFIN.NS,ICICIBANK.NS,0.8102,positive
+Financial Services,CHOLAFIN.NS,IEX.NS,0.8549,positive
+Financial Services,CHOLAFIN.NS,MANAPPURAM.NS,0.7987,positive
+Financial Services,CHOLAFIN.NS,MUTHOOTFIN.NS,0.7938,positive
+Financial Services,CHOLAFIN.NS,SHRIRAMFIN.NS,0.8478,positive
+Financial Services,CUB.NS,FEDERALBNK.NS,0.8898,positive
+Financial Services,CUB.NS,ICICIBANK.NS,0.8858,positive
+Financial Services,CUB.NS,ICICIGI.NS,0.7614,positive
+Financial Services,CUB.NS,IEX.NS,0.8344,positive
+Financial Services,CUB.NS,MFSL.NS,0.8744,positive
+Financial Services,CUB.NS,MUTHOOTFIN.NS,0.8471,positive
+Financial Services,CUB.NS,SHRIRAMFIN.NS,0.8112,positive
+Financial Services,FEDERALBNK.NS,ICICIGI.NS,0.8703,positive
+Financial Services,FEDERALBNK.NS,IEX.NS,0.8718,positive
+Financial Services,FEDERALBNK.NS,MFSL.NS,0.8092,positive
+Financial Services,FEDERALBNK.NS,MUTHOOTFIN.NS,0.8751,positive
+Financial Services,FEDERALBNK.NS,SHRIRAMFIN.NS,0.9018,positive
+Financial Services,HDFCBANK.NS,CUB.NS,0.7985,positive
+Financial Services,HDFCBANK.NS,ICICIBANK.NS,0.8149,positive
+Financial Services,HDFCBANK.NS,INDUSINDBK.NS,-0.7772,negative
+Financial Services,HDFCBANK.NS,MFSL.NS,0.7742,positive
+Financial Services,HDFCBANK.NS,MUTHOOTFIN.NS,0.7855,positive
+Financial Services,ICICIBANK.NS,BANDHANBNK.NS,-0.7502,negative
+Financial Services,ICICIBANK.NS,FEDERALBNK.NS,0.9187,positive
+Financial Services,ICICIBANK.NS,ICICIGI.NS,0.8348,positive
+Financial Services,ICICIBANK.NS,IEX.NS,0.8557,positive
+Financial Services,ICICIBANK.NS,INDUSINDBK.NS,-0.7778,negative
+Financial Services,ICICIBANK.NS,MANAPPURAM.NS,0.8041,positive
+Financial Services,ICICIBANK.NS,MFSL.NS,0.8695,positive
+Financial Services,ICICIBANK.NS,MUTHOOTFIN.NS,0.9317,positive
+Financial Services,ICICIBANK.NS,SBIN.NS,0.8077,positive
+Financial Services,ICICIBANK.NS,SHRIRAMFIN.NS,0.9292,positive
+Financial Services,ICICIGI.NS,IEX.NS,0.9031,positive
+Financial Services,ICICIGI.NS,MUTHOOTFIN.NS,0.7811,positive
+Financial Services,ICICIGI.NS,RECLTD.NS,0.7958,positive
+Financial Services,ICICIGI.NS,SHRIRAMFIN.NS,0.9151,positive
+Financial Services,ICICIPRULI.NS,ICICIGI.NS,0.8309,positive
+Financial Services,IDFCFIRSTB.NS,BANDHANBNK.NS,0.9183,positive
+Financial Services,IDFCFIRSTB.NS,FEDERALBNK.NS,-0.7719,negative
+Financial Services,IDFCFIRSTB.NS,ICICIBANK.NS,-0.8111,negative
+Financial Services,IDFCFIRSTB.NS,INDUSINDBK.NS,0.8091,positive
+Financial Services,IDFCFIRSTB.NS,MUTHOOTFIN.NS,-0.8514,negative
+Financial Services,IDFCFIRSTB.NS,RBLBANK.NS,0.7998,positive
+Financial Services,IDFCFIRSTB.NS,SHRIRAMFIN.NS,-0.7714,negative
+Financial Services,IEX.NS,MANAPPURAM.NS,0.7615,positive
+Financial Services,IEX.NS,MUTHOOTFIN.NS,0.81,positive
+Financial Services,IEX.NS,SHRIRAMFIN.NS,0.9154,positive
+Financial Services,INDUSINDBK.NS,MUTHOOTFIN.NS,-0.7933,negative
+Financial Services,KOTAKBANK.NS,BAJAJFINSV.NS,0.8352,positive
+Financial Services,KOTAKBANK.NS,BAJFINANCE.NS,0.8779,positive
+Financial Services,KOTAKBANK.NS,HDFCBANK.NS,0.7653,positive
+Financial Services,KOTAKBANK.NS,SBICARD.NS,0.8095,positive
+Financial Services,LICI.NS,PNB.NS,0.9088,positive
+Financial Services,LICI.NS,RECLTD.NS,0.8885,positive
+Financial Services,MANAPPURAM.NS,MUTHOOTFIN.NS,0.8255,positive
+Financial Services,MANAPPURAM.NS,SHRIRAMFIN.NS,0.7944,positive
+Financial Services,MFSL.NS,IEX.NS,0.7549,positive
+Financial Services,MFSL.NS,MANAPPURAM.NS,0.7563,positive
+Financial Services,MFSL.NS,MUTHOOTFIN.NS,0.8081,positive
+Financial Services,MFSL.NS,SHRIRAMFIN.NS,0.7995,positive
+Financial Services,PNB.NS,RECLTD.NS,0.8307,positive
+Financial Services,RBLBANK.NS,INDUSINDBK.NS,0.7545,positive
+Financial Services,SBICARD.NS,BAJFINANCE.NS,0.8728,positive
+Financial Services,SBILIFE.NS,CHOLAFIN.NS,0.7826,positive
+Financial Services,SBILIFE.NS,ICICIGI.NS,0.8517,positive
+Financial Services,SBILIFE.NS,IEX.NS,0.8595,positive
+Financial Services,SBILIFE.NS,MFSL.NS,0.7733,positive
+Financial Services,SBILIFE.NS,SHRIRAMFIN.NS,0.8128,positive
+Financial Services,SBIN.NS,FEDERALBNK.NS,0.8244,positive
+Financial Services,SBIN.NS,ICICIGI.NS,0.8606,positive
+Financial Services,SBIN.NS,IEX.NS,0.7768,positive
+Financial Services,SBIN.NS,LICI.NS,0.8243,positive
+Financial Services,SBIN.NS,PNB.NS,0.7852,positive
+Financial Services,SBIN.NS,RECLTD.NS,0.8445,positive
+Financial Services,SBIN.NS,SHRIRAMFIN.NS,0.8176,positive
+Financial Services,SHRIRAMFIN.NS,MUTHOOTFIN.NS,0.8813,positive
+Healthcare,APOLLOHOSP.NS,AUROPHARMA.NS,0.785,positive
+Healthcare,APOLLOHOSP.NS,BIOCON.NS,0.8106,positive
+Healthcare,APOLLOHOSP.NS,DIVISLAB.NS,0.8099,positive
+Healthcare,APOLLOHOSP.NS,GLENMARK.NS,0.881,positive
+Healthcare,APOLLOHOSP.NS,GRANULES.NS,0.8592,positive
+Healthcare,APOLLOHOSP.NS,LUPIN.NS,0.9371,positive
+Healthcare,APOLLOHOSP.NS,SUNPHARMA.NS,0.9535,positive
+Healthcare,APOLLOHOSP.NS,TORNTPHARM.NS,0.949,positive
+Healthcare,AUROPHARMA.NS,GLENMARK.NS,0.8423,positive
+Healthcare,AUROPHARMA.NS,GRANULES.NS,0.8922,positive
+Healthcare,AUROPHARMA.NS,LUPIN.NS,0.8446,positive
+Healthcare,AUROPHARMA.NS,TORNTPHARM.NS,0.848,positive
+Healthcare,BIOCON.NS,AUROPHARMA.NS,0.7661,positive
+Healthcare,BIOCON.NS,DIVISLAB.NS,0.8221,positive
+Healthcare,BIOCON.NS,GLENMARK.NS,0.9038,positive
+Healthcare,BIOCON.NS,GRANULES.NS,0.8492,positive
+Healthcare,BIOCON.NS,LUPIN.NS,0.8731,positive
+Healthcare,BIOCON.NS,SUNPHARMA.NS,0.8467,positive
+Healthcare,BIOCON.NS,TORNTPHARM.NS,0.8931,positive
+Healthcare,CIPLA.NS,APOLLOHOSP.NS,0.8647,positive
+Healthcare,CIPLA.NS,AUROPHARMA.NS,0.8829,positive
+Healthcare,CIPLA.NS,BIOCON.NS,0.7948,positive
+Healthcare,CIPLA.NS,GLENMARK.NS,0.8552,positive
+Healthcare,CIPLA.NS,GRANULES.NS,0.8485,positive
+Healthcare,CIPLA.NS,LUPIN.NS,0.9048,positive
+Healthcare,CIPLA.NS,METROPOLIS.NS,0.7711,positive
+Healthcare,CIPLA.NS,SUNPHARMA.NS,0.9235,positive
+Healthcare,CIPLA.NS,TORNTPHARM.NS,0.9117,positive
+Healthcare,DIVISLAB.NS,GLENMARK.NS,0.8928,positive
+Healthcare,DIVISLAB.NS,LUPIN.NS,0.8471,positive
+Healthcare,DRREDDY.NS,AUROPHARMA.NS,0.8017,positive
+Healthcare,DRREDDY.NS,CIPLA.NS,0.8003,positive
+Healthcare,DRREDDY.NS,GRANULES.NS,0.8192,positive
+Healthcare,DRREDDY.NS,METROPOLIS.NS,0.7577,positive
+Healthcare,GRANULES.NS,GLENMARK.NS,0.8938,positive
+Healthcare,GRANULES.NS,LUPIN.NS,0.9118,positive
+Healthcare,LALPATHLAB.NS,AUROPHARMA.NS,0.8583,positive
+Healthcare,LALPATHLAB.NS,GLENMARK.NS,0.8318,positive
+Healthcare,LALPATHLAB.NS,GRANULES.NS,0.8379,positive
+Healthcare,LALPATHLAB.NS,METROPOLIS.NS,0.8407,positive
+Healthcare,LALPATHLAB.NS,TORNTPHARM.NS,0.7569,positive
+Healthcare,LAURUSLABS.NS,DIVISLAB.NS,0.9109,positive
+Healthcare,LAURUSLABS.NS,GLENMARK.NS,0.7527,positive
+Healthcare,LAURUSLABS.NS,LUPIN.NS,0.7616,positive
+Healthcare,LAURUSLABS.NS,TORNTPHARM.NS,0.761,positive
+Healthcare,LUPIN.NS,GLENMARK.NS,0.9453,positive
+Healthcare,METROPOLIS.NS,AUROPHARMA.NS,0.8998,positive
+Healthcare,METROPOLIS.NS,GLENMARK.NS,0.7573,positive
+Healthcare,METROPOLIS.NS,GRANULES.NS,0.8333,positive
+Healthcare,METROPOLIS.NS,SUNPHARMA.NS,0.7624,positive
+Healthcare,METROPOLIS.NS,TORNTPHARM.NS,0.7525,positive
+Healthcare,SUNPHARMA.NS,AUROPHARMA.NS,0.8415,positive
+Healthcare,SUNPHARMA.NS,DIVISLAB.NS,0.8064,positive
+Healthcare,SUNPHARMA.NS,GLENMARK.NS,0.921,positive
+Healthcare,SUNPHARMA.NS,GRANULES.NS,0.8907,positive
+Healthcare,SUNPHARMA.NS,LUPIN.NS,0.9829,positive
+Healthcare,SUNPHARMA.NS,TORNTPHARM.NS,0.9767,positive
+Healthcare,TORNTPHARM.NS,DIVISLAB.NS,0.8537,positive
+Healthcare,TORNTPHARM.NS,GLENMARK.NS,0.9509,positive
+Healthcare,TORNTPHARM.NS,GRANULES.NS,0.9055,positive
+Healthcare,TORNTPHARM.NS,LUPIN.NS,0.9783,positive
+Industrials,ADANIPORTS.NS,BEL.NS,0.8132,positive
+Industrials,ADANIPORTS.NS,BHEL.NS,0.9619,positive
+Industrials,ADANIPORTS.NS,CUMMINSIND.NS,0.9017,positive
+Industrials,ASHOKLEY.NS,BEL.NS,0.905,positive
+Industrials,ASHOKLEY.NS,CUMMINSIND.NS,0.82,positive
+Industrials,ASHOKLEY.NS,INDIGO.NS,0.8808,positive
+Industrials,BHEL.NS,BEL.NS,0.7772,positive
+Industrials,CUMMINSIND.NS,BEL.NS,0.8413,positive
+Industrials,CUMMINSIND.NS,BHEL.NS,0.9134,positive
+Industrials,CUMMINSIND.NS,SIEMENS.NS,0.7879,positive
+Industrials,ESCORTS.NS,CUMMINSIND.NS,0.7598,positive
+Industrials,ESCORTS.NS,POLYCAB.NS,0.8387,positive
+Industrials,HAVELLS.NS,ADANIPORTS.NS,0.8065,positive
+Industrials,HAVELLS.NS,ASHOKLEY.NS,0.7889,positive
+Industrials,HAVELLS.NS,BHEL.NS,0.8335,positive
+Industrials,HAVELLS.NS,CUMMINSIND.NS,0.9198,positive
+Industrials,HAVELLS.NS,ESCORTS.NS,0.8552,positive
+Industrials,HAVELLS.NS,POLYCAB.NS,0.8392,positive
+Industrials,HAVELLS.NS,SIEMENS.NS,0.8156,positive
+Industrials,INDIGO.NS,BEL.NS,0.9466,positive
+Industrials,INDIGO.NS,CUMMINSIND.NS,0.7948,positive
+Industrials,IRCTC.NS,ADANIPORTS.NS,0.7869,positive
+Industrials,IRCTC.NS,BHEL.NS,0.8492,positive
+Industrials,IRCTC.NS,CONCOR.NS,0.8424,positive
+Industrials,LT.NS,ADANIPORTS.NS,0.8638,positive
+Industrials,LT.NS,BHEL.NS,0.8722,positive
+Industrials,LT.NS,CUMMINSIND.NS,0.7729,positive
+Industrials,POLYCAB.NS,ASHOKLEY.NS,0.7903,positive
+Industrials,POLYCAB.NS,CUMMINSIND.NS,0.7887,positive
+Industrials,POLYCAB.NS,SIEMENS.NS,0.7552,positive
+Technology,COFORGE.NS,PERSISTENT.NS,0.9225,positive
+Technology,HCLTECH.NS,COFORGE.NS,0.8522,positive
+Technology,HCLTECH.NS,OFSS.NS,0.8927,positive
+Technology,HCLTECH.NS,PERSISTENT.NS,0.947,positive
+Technology,INFY.NS,HCLTECH.NS,0.9092,positive
+Technology,INFY.NS,OFSS.NS,0.8383,positive
+Technology,INFY.NS,PERSISTENT.NS,0.8355,positive
+Technology,INFY.NS,TECHM.NS,0.8887,positive
+Technology,INFY.NS,WIPRO.NS,0.8632,positive
+Technology,MPHASIS.NS,HCLTECH.NS,0.8414,positive
+Technology,MPHASIS.NS,INFY.NS,0.9104,positive
+Technology,MPHASIS.NS,OFSS.NS,0.7813,positive
+Technology,MPHASIS.NS,TECHM.NS,0.8312,positive
+Technology,PERSISTENT.NS,OFSS.NS,0.8564,positive
+Technology,TCS.NS,INFY.NS,0.8381,positive
+Technology,TCS.NS,LTTS.NS,0.8227,positive
+Technology,TCS.NS,MPHASIS.NS,0.818,positive
+Technology,TCS.NS,OFSS.NS,0.7763,positive
+Technology,TECHM.NS,COFORGE.NS,0.8658,positive
+Technology,TECHM.NS,HCLTECH.NS,0.9147,positive
+Technology,TECHM.NS,OFSS.NS,0.8735,positive
+Technology,TECHM.NS,PERSISTENT.NS,0.9441,positive
+Technology,WIPRO.NS,COFORGE.NS,0.8196,positive
+Technology,WIPRO.NS,HCLTECH.NS,0.8914,positive
+Technology,WIPRO.NS,OFSS.NS,0.8253,positive
+Technology,WIPRO.NS,PERSISTENT.NS,0.9157,positive
+Technology,WIPRO.NS,TECHM.NS,0.8858,positive
+Utilities,GUJGASLTD.NS,MGL.NS,0.7868,positive
+Utilities,MGL.NS,GAIL.NS,0.874,positive
+Utilities,MGL.NS,NTPC.NS,0.8547,positive
+Utilities,MGL.NS,POWERGRID.NS,0.8014,positive
+Utilities,MGL.NS,TATAPOWER.NS,0.8062,positive
+Utilities,NTPC.NS,GAIL.NS,0.9609,positive
+Utilities,NTPC.NS,POWERGRID.NS,0.9543,positive
+Utilities,NTPC.NS,TATAPOWER.NS,0.9599,positive
+Utilities,POWERGRID.NS,GAIL.NS,0.9657,positive
+Utilities,TATAPOWER.NS,GAIL.NS,0.967,positive
+Utilities,TATAPOWER.NS,POWERGRID.NS,0.9461,positive
