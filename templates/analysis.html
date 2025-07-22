@@ -1,12 +1,16 @@
 {% extends 'layout.html' %}
 {% block title %}Analysis for {{ summary.pair }}{% endblock %}
 
+{% block head %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+{% endblock %}
+
 {% block content %}
 <div class="space-y-8">
   <a href="{{ url_for('index') }}" class="text-blue-600 hover:underline">&larr; Back to Dashboard</a>
   <h2 class="text-3xl font-bold text-center">Analysis for: <span class="text-blue-700">{{ summary.pair }}</span></h2>
 
-  <!-- Performance Summary -->
   <section class="bg-white p-6 rounded-lg shadow-md">
     <h3 class="text-2xl font-semibold mb-4 text-center">Performance Summary</h3>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -20,16 +24,16 @@
     </p>
   </section>
 
-  <!-- Cumulative PnL Chart -->
   <section class="bg-white p-6 rounded-lg shadow-md">
     <h3 class="text-2xl font-semibold mb-4 text-center">Cumulative P&L Chart</h3>
-    <canvas id="pnlChart" aria-label="Cumulative P&L line chart"></canvas>
+    <div class="relative w-full" style="width:100%;max-width:100%;height:40vh;">
+      <canvas id="pnlChart"></canvas>
+    </div>
   </section>
 
-  <!-- Trade Details Table -->
   {% if table_rows %}
   <section class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
-    <h3 class="text-2xl font-semibold mb-4 text-center">Trade Details (click row for full metrics)</h3>
+    <h3 class="text-2xl font-semibold mb-4 text-center">Trade Details</h3>
     <table class="min-w-full text-left text-sm border" id="trade-table">
       <thead class="bg-gray-100 text-gray-700">
         <tr>
@@ -48,7 +52,7 @@
       </thead>
       <tbody>
         {% for row in table_rows %}
-        <tr class="hover:bg-blue-50 cursor-pointer" data-row-idx="{{ loop.index0 }}">
+        <tr class="hover:bg-blue-50 cursor-pointer" data-row-idx="{{ loop.index0 }}" title="PnL: {{ row.Trade_PnL }} | Cum: {{ row.Cumulative_PnL }} | Beta: {{ row.Beta }}">
           <td class="px-4 py-2 border">{{ row.Stock_Y | default('N/A', true) }}</td>
           <td class="px-4 py-2 border">{{ row.Stock_X | default('N/A', true) }}</td>
           {% if is_sector_mode %}<td class="px-4 py-2 border">{{ row.get('Sector', 'N/A') }}</td>{% endif %}
@@ -68,13 +72,12 @@
   {% endif %}
 </div>
 
-<!-- Data passed from backend -->
 <script id="chart-data-json" type="application/json">{{ chart_data|tojson|safe }}</script>
 {% if table_rows %}<script id="trade-rows-json" type="application/json">{{ table_rows|tojson|safe }}</script>{% endif %}
 
-<!-- Modal for detailed view -->
+<!-- Modal-->
 <div id="trade-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-  <div class="bg-white w-full max-w-2xl rounded-lg shadow-xl relative p-6 overflow-y-auto max-h-[90vh]">
+  <div class="bg-white w-full max-w-xl rounded-lg shadow-xl relative p-6 overflow-y-auto max-h-[80vh]" id="trade-modal-inner">
     <button type="button" id="trade-modal-close" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
     <h3 class="text-2xl font-semibold mb-4" id="trade-modal-title">Trade Details</h3>
     <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm" id="trade-modal-body"></dl>
@@ -83,91 +86,78 @@
 
 <script>
 (function(){
-  function getChartData(){
-    const el = document.getElementById('chart-data-json');
-    try { return JSON.parse(el.textContent.trim() || '{}'); } catch(e) { console.error("Failed to parse chart data JSON:", e); return {labels:[], cumulative_pnl:[], trade_pnl:[]}; }
-  }
-  
-  const chartData = getChartData();
-  const ctxEl = document.getElementById('pnlChart');
-  if(ctxEl){
-    new Chart(ctxEl.getContext('2d'),{
-      type:'line', 
-      data:{ 
-        labels: chartData.labels,
-        datasets:[{ 
-          label:'Cumulative P&L', data:chartData.cumulative_pnl, borderColor:'rgb(59,130,246)', 
-          backgroundColor:'rgba(59,130,246,0.1)', borderWidth:2, pointRadius:3, 
-          pointBackgroundColor:'rgb(59,130,246)', fill:true, tension:0.1 
-        }] 
+  function parseNum(val){return Number((val||'0').toString().replace(/,/g,''))||0;}
+  const chartEl=document.getElementById('chart-data-json');
+  const chartData = chartEl? JSON.parse(chartEl.textContent||'{}') : {labels:[],cumulative_pnl:[],trade_pnl:[]};
+  const labels = chartData.labels||[];
+  const cumData = (chartData.cumulative_pnl||[]).map(parseNum);
+  const tradeData = (chartData.trade_pnl||[]).map(parseNum);
+  const ctxEl=document.getElementById('pnlChart');
+  if(ctxEl && typeof Chart!=='undefined'){
+    const ctx = ctxEl.getContext('2d');
+    new Chart(ctx, {
+      data:{
+        labels:labels,
+        datasets:[
+          {type:'line',label:'Cumulative P&L',data:cumData,borderColor:'rgb(59,130,246)',backgroundColor:'rgba(59,130,246,0.1)',fill:true,tension:0.15,pointRadius:2}
+        ]
       },
-      options:{ 
-        responsive:true, interaction:{mode:'index',intersect:false}, 
-        scales:{ 
-          x: { ticks: { callback: function(value) { const [y, m, d] = this.getLabelForValue(value).split('-'); return `${d}-${m}-${y}`; } } }, 
-          y:{ beginAtZero:false } 
-        },
-        plugins:{ tooltip:{ callbacks:{ 
-              title: (items) => { const [y, m, d] = items[0].label.split('-'); return `${d}-${m}-${y}`; },
-              label:(ctx) => {
-                const cum = ctx.parsed.y; const trade = chartData.trade_pnl?.[ctx.dataIndex];
-                let lines = [`Cumulative: ${Number(cum).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`];
-                if(trade != null) lines.push(`Trade P&L: ${Number(trade).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`);
-                return lines;
-              }
-        }}}
+      options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: { mode: 'index', intersect: false },
+  scales: {
+    x: {
+      ticks: {
+        callback: function (value, index) {
+          const label = this.getLabelForValue(index);
+          // Convert YYYY-MM-DD to DDMMYYYY
+          const parts = label.split('-');
+          if (parts.length === 3) {
+            return parts[2] + '-' + parts[1] + '-' + parts[0];
+          }
+          return label;
+        }
       }
+    }
+  },
+  plugins: { legend: { position: 'bottom' } }
+}
+
     });
   }
 
-  let tradeRows = [];
-  const tradeRowsEl = document.getElementById('trade-rows-json');
-  if(tradeRowsEl){ try { window.__tradeRows = JSON.parse(tradeRowsEl.textContent.trim() || '[]'); } catch(e) { console.error("Failed to parse trade rows JSON:", e); window.__tradeRows = []; } } else { window.__tradeRows = []; }
-
-  const modal = document.getElementById('trade-modal');
-  const modalBody = document.getElementById('trade-modal-body');
-  const modalTitle = document.getElementById('trade-modal-title');
-  const modalClose = document.getElementById('trade-modal-close');
+  const tradeRowsEl=document.getElementById('trade-rows-json');
+  const tradeRows=tradeRowsEl? JSON.parse(tradeRowsEl.textContent||'[]') : [];
+  const modal=document.getElementById('trade-modal');
+  const modalInner=document.getElementById('trade-modal-inner');
+  const modalBody=document.getElementById('trade-modal-body');
+  const modalTitle=document.getElementById('trade-modal-title');
+  const modalClose=document.getElementById('trade-modal-close');
 
   function openTradeModal(idx){
-    const row = window.__tradeRows[idx];
-    if(!row) return;
-    modalTitle.textContent = `${row.Stock_Y} / ${row.Stock_X} Trade`;
-    modalBody.innerHTML = '';
-    
-    const fields = [
-      ['Stock Y', row.Stock_Y], ['Stock X', row.Stock_X], ['Sector', row.Sector],
-      ['Entry Date', row.Entry_Date], ['Exit Date', row.Exit_Date],
-      ['Position', row.Position], ['Trade P&L', row.Trade_PnL],
-      ['Cumulative P&L', row.Cumulative_PnL], ['Returns', row.Returns],
-      ['ADF p-val Entry', row.ADF_Entry], ['ADF p-val Exit', row.ADF_Exit],
-      ['Z-Score Entry', row.Z_Entry], ['Z-Score Exit', row.Z_Exit],
-      ['Beta', row.Beta], ['Intercept', row.Intercept], ['StdErr Residual', row.StdErr_Residual],
-      ['Entry Open Price X', row.Entry_Open_Price_X], ['Exit Open Price X', row.Exit_Open_Price_X],
-      ['Entry Open Price Y', row.Entry_Open_Price_Y], ['Exit Open Price Y', row.Exit_Open_Price_Y],
-      ['Lot Size X', row.Lot_Size_X], ['Lot Size Y', row.Lot_Size_Y]
-    ];
-
-    fields.forEach(([label, val]) => {
-      const displayValue = (val !== undefined && val !== null && val !== '') ? val : 'N/A';
-      const dt = document.createElement('dt'); dt.className = "font-medium text-gray-600"; dt.textContent = label;
-      const dd = document.createElement('dd'); dd.className = "text-gray-900"; dd.textContent = displayValue;
-      modalBody.appendChild(dt); modalBody.appendChild(dd);
+    const row=tradeRows[idx]; if(!row) return;
+    modalTitle.textContent=`${row.Stock_Y} / ${row.Stock_X} Trade`;
+    modalBody.innerHTML='';
+    const entries=Object.entries(row);
+    entries.forEach(([k,v])=>{
+      const dt=document.createElement('dt');dt.className='font-medium text-gray-600';dt.textContent=k;modalBody.appendChild(dt);
+      const dd=document.createElement('dd');dd.className='text-gray-900';dd.textContent=(v!==undefined&&v!==null&&v!=='')?v:'N/A';modalBody.appendChild(dd);
     });
-    modal.classList.remove('hidden'); modal.classList.add('flex');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+  function closeTradeModal(){
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
   }
 
-  function closeTradeModal(){ modal.classList.add('hidden'); modal.classList.remove('flex'); }
-  
   if(modalClose) modalClose.addEventListener('click', closeTradeModal);
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeTradeModal());
-  modal.addEventListener('click', (e) => e.target === modal && closeTradeModal());
+  modal.addEventListener('click', e=>{ if(e.target===modal) closeTradeModal(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeTradeModal(); });
 
-  const tradeTable = document.getElementById('trade-table');
-  if(tradeTable){ tradeTable.addEventListener('click', (e) => {
-    const tr = e.target.closest('tr[data-row-idx]');
-    if(tr) openTradeModal(Number(tr.dataset.rowIdx));
-  });}
+  const tradeTable=document.getElementById('trade-table');
+  if(tradeTable){ tradeTable.addEventListener('click', e=>{ const tr=e.target.closest('tr[data-row-idx]'); if(tr) openTradeModal(Number(tr.dataset.rowIdx)); }); }
 })();
 </script>
 {% endblock %}
