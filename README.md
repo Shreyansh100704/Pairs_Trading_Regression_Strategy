@@ -144,6 +144,8 @@ where mu and sigma are the mean and standard deviation of epsilon.
 - **Entry:** When |Z| > Z_ENTRY (2.5)  
   - If (Z > 2.5), short stock Y and long stock X.
   - If (Z < -2.5), long stock Y and short stock X.
+  - We're focussing on Beta neutral trades here. This means that we're trying to explain Y's stock price in terms of X's stock price multiplied by beta.
+  - Alpha (Intercept) means the regression equation cannot explain {unexplained = (Intercept/Price_of_X)} % of Y's stock price. This means that we're trading at (1-unexplained) probability here. Avoid the trade if this probability is too low until you're okay with very high risk.
 
 - **Exit:** When |Z| < Z_EXIT (1.0)
 
