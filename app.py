@@ -13,17 +13,14 @@ import os
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 
-# -----------------------------------------------------------------------------
-# App setup
-# -----------------------------------------------------------------------------
+
 app = Flask(__name__)
 app.secret_key = "a-very-secret-key-that-should-be-changed"
 
-# Data paths
+
 DATA_DIR = os.path.join(app.root_path, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# File paths
 CORRELATED_FILE = os.path.join(DATA_DIR, "correlated_pairs.csv")
 FINAL_RESULTS_FILE = os.path.join(DATA_DIR, "final_results.csv")
 CORRELATED_SECTOR_FILE = os.path.join(DATA_DIR, "correlated_pairs_by_sector.csv")
@@ -34,9 +31,7 @@ ALLOWED_EXTENSIONS = {"csv"}
 def _allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# -----------------------------------------------------------------------------
-# Data Loading and Normalization
-# -----------------------------------------------------------------------------
+
 def _read_csv_flexible(path):
     if not os.path.exists(path):
         return pd.DataFrame()
@@ -69,9 +64,7 @@ def _normalize_and_validate_cols(df, required_cols, optional_cols=[]):
     
     return df_renamed
 
-# -----------------------------------------------------------------------------
-# Download market data
-# -----------------------------------------------------------------------------
+
 def download_data(stocks, start_date, end_date):
     try:
         df = yf.download(stocks, start=start_date, end=end_date, progress=False, auto_adjust=True, actions=False)["Close"]
@@ -85,12 +78,10 @@ def download_data(stocks, start_date, end_date):
     df.index = pd.to_datetime(df.index)
     return df
 
-# -----------------------------------------------------------------------------
-# Signal Generation Logic
-# -----------------------------------------------------------------------------
+
 Z_ENTRY, Z_EXIT = 2.5, 1
 
-def evaluate_pair_for_signals(price_df, stock_x, stock_y, asof_dt, sector=None):
+def evaluate_pair_for_signals(price_df, stock_x, stock_y, asof_dt, all_signals=True, sector=None):
     if price_df is None or price_df.empty: return None
     price_df = price_df.loc[price_df.index <= asof_dt]
     if len(price_df) < 30 or stock_x not in price_df.columns or stock_y not in price_df.columns: return None
@@ -117,7 +108,7 @@ def evaluate_pair_for_signals(price_df, stock_x, stock_y, asof_dt, sector=None):
     signal_data = {
         "Date": latest_day.strftime("%d-%m-%Y"), "Stock_Y": stock_y, "Stock_X": stock_x, 
         "Signal": signal, "Z_Score": round(float(z_score), 2), 
-        "Beta": round(float(beta), 2), "ADF_P_Value": f"{p_adf:.4f}"
+        "Beta": round(float(beta), 2), "Intercept": round(float(intercept), 2), "ADF_P_Value": f"{p_adf:.4f}"
     }
     if sector: signal_data["Sector"] = sector
     return signal_data
@@ -133,9 +124,7 @@ def _safe_format(value, format_spec):
     try: return f"{float(value):{format_spec}}"
     except (ValueError, TypeError): return str(value)
 
-# -----------------------------------------------------------------------------
-# Flask Routes
-# -----------------------------------------------------------------------------
+#Flask Routes
 @app.route("/")
 def index():
     files_exist = {f: os.path.exists(p) for f, p in {'correlated': CORRELATED_FILE, 'final': FINAL_RESULTS_FILE, 'correlated_sector': CORRELATED_SECTOR_FILE, 'final_sector': FINAL_RESULTS_SECTOR_FILE}.items()}
@@ -166,21 +155,30 @@ def upload_data():
 
 @app.route("/get_live_signals")
 def get_live_signals():
-    source, period, signal_type, date_str = request.args.get('source', 'all'), request.args.get('period', 'week'), request.args.get('signal_type', 'entry'), request.args.get("date", "").strip()
+    source = request.args.get('source', 'all')
+    period = request.args.get('period', 'week')
+    signal_type = request.args.get('signal_type', 'entry').lower()
+    date_str = request.args.get("date", "").strip()
+
     try:
         asof_dt = datetime.strptime(date_str, "%Y-%m-%d") if date_str else datetime.now()
     except ValueError:
         return jsonify({"error": f"Invalid date format: {date_str}"}), 400
+
     is_sector_mode = source == 'sector'
     file_path = CORRELATED_SECTOR_FILE if is_sector_mode else CORRELATED_FILE
     required_cols = ['Stock_Y', 'Stock_X', 'Sector'] if is_sector_mode else ['Stock_Y', 'Stock_X']
     df_raw = _read_csv_flexible(file_path)
-    if df_raw.empty: return jsonify({"error": f"{os.path.basename(file_path)} not found or is empty."}), 404
+    if df_raw.empty:
+        return jsonify({"error": f"{os.path.basename(file_path)} not found or is empty."}), 404
+
     try:
         df = _normalize_and_validate_cols(df_raw, required_cols)
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
-    stock_y_q, stock_x_q = request.args.get('stock_y'), request.args.get('stock_x')
+
+    stock_y_q = request.args.get('stock_y')
+    stock_x_q = request.args.get('stock_x')
     if stock_y_q and stock_x_q:
         if is_sector_mode:
             match = df[(df['Stock_Y'] == stock_y_q) & (df['Stock_X'] == stock_x_q)]
@@ -190,15 +188,106 @@ def get_live_signals():
             pairs_to_process = [(stock_y_q, stock_x_q)]
     else:
         pairs_to_process = list(df[required_cols].itertuples(index=False, name=None))
-    with ProcessPoolExecutor(max_workers=os.cpu_count() or 1) as executor:
-        all_signals = [s for s in executor.map(partial(run_check_for_pair_worker, asof_dt=asof_dt), pairs_to_process) if s]
-    filtered_signals = [s for s in all_signals if signal_type.lower() in s['Signal'].lower()] if signal_type != 'all' else all_signals
+
+    #Entry/Exit Logic
+    all_signals = []
+
+    # Collect all stocks for bulk download
+    unique_stocks = set([p[0] for p in pairs_to_process] + [p[1] for p in pairs_to_process])
+    price_start_date = (asof_dt - timedelta(days=500)).strftime("%Y-%m-%d")
+    price_end_date = (asof_dt + timedelta(days=1)).strftime("%Y-%m-%d")
+    price_df_all = download_data(list(unique_stocks), price_start_date, price_end_date)
+
+    if price_df_all is None or price_df_all.empty:
+        return jsonify({"error": "Price data could not be loaded."}), 404
+
+    def evaluate_for_day(day):
+        results = []
+        for p in pairs_to_process:
+            stock_y, stock_x = p[0], p[1]
+            sector = p[2] if len(p) > 2 else None
+            sub_df = price_df_all[[stock_x, stock_y]].copy()
+            signal = evaluate_pair_for_signals(sub_df, stock_x, stock_y, day, sector=sector)
+            if signal:
+                results.append(signal)
+        return results
+
+    if period == 'today':
+        all_signals = evaluate_for_day(asof_dt)
+    else:
+        # Past 7 trading days (skip weekends)
+        current_day = asof_dt
+        for _ in range(7):
+            if current_day.weekday() < 5 and current_day in price_df_all.index:
+                all_signals.extend(evaluate_for_day(current_day))
+            current_day -= timedelta(days=1)
+
+    filtered_signals = [s for s in all_signals if signal_type in s['Signal'].lower()] if signal_type != 'all' else all_signals
+
     if period == 'today':
         final_signals = [s for s in filtered_signals if datetime.strptime(s['Date'], '%d-%m-%Y').date() == asof_dt.date()]
     else:
-        start_of_week = asof_dt - timedelta(days=asof_dt.weekday())
-        final_signals = [s for s in filtered_signals if datetime.strptime(s['Date'], '%d-%m-%Y') >= start_of_week]
+        final_signals = filtered_signals  
+
     return jsonify(final_signals)
+
+
+@app.route("/get_pair_details")
+def get_pair_details():
+    stock_y = request.args.get('stock_y')
+    stock_x = request.args.get('stock_x')
+    date_str = request.args.get("date", "").strip()
+    source = request.args.get('source', 'all')
+
+    if not stock_y or not stock_x or not date_str:
+        return jsonify({"error": "Missing stock_y, stock_x or date parameter."}), 400
+
+    try:
+        asof_dt = datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        return jsonify({"error": f"Invalid date format: {date_str}"}), 400
+
+    # Load price data for both stocks
+    start_date = (asof_dt - timedelta(days=500)).strftime("%Y-%m-%d")
+    end_date = (asof_dt + timedelta(days=1)).strftime("%Y-%m-%d")
+    price_df = download_data([stock_x, stock_y], start_date, end_date)
+    if price_df is None or price_df.empty:
+        return jsonify({"error": "No price data found."}), 404
+
+    if asof_dt not in price_df.index:
+        return jsonify({"error": f"No data for {asof_dt.strftime('%d-%m-%Y')}"}), 404
+
+    # OLS regression
+    y = price_df[stock_y]
+    X = sm.add_constant(price_df[stock_x])
+    try:
+        model = sm.OLS(y, X).fit()
+    except Exception as e:
+        return jsonify({"error": f"OLS regression failed: {e}"}), 500
+
+    resid = model.resid
+    try:
+        p_adf = adfuller(resid)[1]
+    except Exception:
+        p_adf = None
+
+    y_val = float(price_df.loc[asof_dt, stock_y])
+    x_val = float(price_df.loc[asof_dt, stock_x])
+    intercept, beta = model.params
+    std_resid = float(np.std(resid))
+    z_score = (y_val - (intercept + beta * x_val)) / std_resid if std_resid > 1e-8 else 0.0
+
+    details = {
+        "Date": asof_dt.strftime("%d-%m-%Y"),
+        "Stock_Y": stock_y,
+        "Stock_X": stock_x,
+        "ADF_Value": round(p_adf, 4) if p_adf is not None else "N/A",
+        "Z_Score": round(z_score, 2),
+        "Beta": round(beta, 2),
+        "Intercept": round(intercept, 2)
+    }
+    return jsonify([details])
+
 
 @app.route("/analyze/<stock_y>/<stock_x>")
 def analyze_pair(stock_y, stock_x):
@@ -226,7 +315,7 @@ def analyze_pair(stock_y, stock_x):
     pair_df = df.loc[(df["Stock_Y"].astype(str).str.strip().str.upper() == want_y) & (df["Stock_X"].astype(str).str.strip().str.upper() == want_x)].copy()
     if pair_df.empty: return f"No historical trades found for {want_y} / {want_x} in the selected data source.", 404
     
-    # --- Robust Date Parsing ---
+    
     def _parse_date_series(s: pd.Series):
         # First, try the explicit DD-MM-YYYY format.
         dt = pd.to_datetime(s, format="%d-%m-%Y", errors="coerce")
@@ -278,6 +367,8 @@ def analyze_pair(stock_y, stock_x):
         if is_sector_mode: rec['Sector'] = r.get('Sector')
         table_rows.append(rec)
     return render_template("analysis.html", summary=summary, chart_data=chart_data, table_rows=table_rows, is_sector_mode=is_sector_mode)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=False)
