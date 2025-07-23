@@ -6,11 +6,11 @@
 
   <!-- Data Source Toggle -->
   <section class="bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-semibold mb-4">1. Select Data Source</h2>
-    <div class="flex items-center space-x-4" id="source-toggle">
+    <h2 class="text-2xl font-semibold mb-4 text-center">1. Select Data Source</h2>
+    <div class="flex items-center justify-center space-x-4" id="source-toggle">
       <label class="flex items-center space-x-2 cursor-pointer">
         <input type="radio" name="source" value="all" class="form-radio h-5 w-5 text-blue-600" checked>
-        <span class="text-gray-700 font-medium">All Pairs</span>
+        <span class="text-gray-700 font-medium ">All Pairs</span>
       </label>
       <label class="flex items-center space-x-2 cursor-pointer">
         <input type="radio" name="source" value="sector" class="form-radio h-5 w-5 text-blue-600">
@@ -20,30 +20,29 @@
   </section>
 
   <!-- Upload CSVs -->
-  <section class="bg-white p-6 rounded-lg shadow-md">
+  <section class="bg-white p-6 rounded-lg shadow-md text-center">
     <h2 class="text-2xl font-semibold mb-4">File Uploads</h2>
     <p class="text-gray-500 mb-4 text-sm">Upload the corresponding CSV files for your selected data source.</p>
     <form action="{{ url_for('upload_data') }}" method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      
       <div class="space-y-4 p-4 border rounded-lg bg-gray-50/50">
         <h3 class="font-semibold text-gray-800 border-b pb-2">All Pairs Data</h3>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
             correlated_pairs.csv
-            <span class="{{ 'text-green-600' if files_exist.correlated else 'text-red-600' }}">
-              ({{ 'found' if files_exist.correlated else 'missing' }})
-            </span>
+            <span class="{{ 'text-green-600' if files_exist.correlated else 'text-red-600' }}">({{ 'found' if files_exist.correlated else 'missing' }})</span>
           </label>
-          <input type="file" name="correlated_file" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+          <input type="file" name="correlated_file" accept=".csv" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
+                file:rounded-md file:border-0 file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
             final_results.csv
-            <span class="{{ 'text-green-600' if files_exist.final else 'text-red-600' }}">
-              ({{ 'found' if files_exist.final else 'missing' }})
-            </span>
+            <span class="{{ 'text-green-600' if files_exist.final else 'text-red-600' }}">({{ 'found' if files_exist.final else 'missing' }})</span>
           </label>
-          <input type="file" name="final_file" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+          <input type="file" name="final_file" accept=".csv" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
+                file:rounded-md file:border-0 file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
         </div>
       </div>
 
@@ -52,35 +51,34 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
             correlated_pairs_by_sector.csv
-            <span class="{{ 'text-green-600' if files_exist.correlated_sector else 'text-red-600' }}">
-              ({{ 'found' if files_exist.correlated_sector else 'missing' }})
-            </span>
+            <span class="{{ 'text-green-600' if files_exist.correlated_sector else 'text-red-600' }}">({{ 'found' if files_exist.correlated_sector else 'missing' }})</span>
           </label>
-          <input type="file" name="correlated_sector_file" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+          <input type="file" name="correlated_sector_file" accept=".csv" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
+                file:rounded-md file:border-0 file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
             correlated_pairs_by_sector_backtest_results.csv
-            <span class="{{ 'text-green-600' if files_exist.final_sector else 'text-red-600' }}">
-              ({{ 'found' if files_exist.final_sector else 'missing' }})
-            </span>
+            <span class="{{ 'text-green-600' if files_exist.final_sector else 'text-red-600' }}">({{ 'found' if files_exist.final_sector else 'missing' }})</span>
           </label>
-          <input type="file" name="final_sector_file" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+          <input type="file" name="final_sector_file" accept=".csv" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
+                file:rounded-md file:border-0 file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
         </div>
       </div>
-      
-      <div class="md:col-span-2">
-        <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300">Upload Files</button>
+
+      <div class="md:col-span-2 btn-center-wrapper">
+        <button type="submit" class="bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300 btn-center btn-vw-md">Upload Files</button>
       </div>
     </form>
   </section>
 
   <!-- Live Entry Signal Analysis -->
-  <section class="bg-white p-6 rounded-lg shadow-md">
+  <section class="bg-white p-6 rounded-lg shadow-md text-center">
     <h2 class="text-2xl font-semibold mb-4">2. Live Entry Signal Analysis</h2>
     <p class="text-gray-600 mb-6">Check for new trading entry signals. The analysis will run on the data source selected above.</p>
-    
-    <div class="flex items-center gap-x-6 gap-y-4 mb-6 flex-wrap">
+    <div class="flex items-center justify-center gap-x-6 gap-y-4 mb-6 flex-wrap">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Analysis Date</label>
         <input type="date" id="live-date" class="border rounded p-2 text-sm bg-gray-50">
@@ -88,15 +86,15 @@
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Signal Period</label>
         <div class="flex items-center space-x-4" id="period-toggle">
-            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="period" value="today" class="form-radio h-4 w-4 text-blue-600"><span class="text-gray-700">Today</span></label>
-            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="period" value="week" class="form-radio h-4 w-4 text-blue-600" checked><span class="text-gray-700">This Week</span></label>
+          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="period" value="today" class="form-radio h-4 w-4 text-blue-600"><span class="text-gray-700">Today</span></label>
+          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="period" value="week" class="form-radio h-4 w-4 text-blue-600" checked><span class="text-gray-700">This Week</span></label>
         </div>
       </div>
-       <div class="self-end">
-          <button id="run-entry-signals-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">Check for Entry Signals</button>
-       </div>
+      <div class="self-end btn-center-wrapper w-full sm:w-auto">
+        <button id="run-entry-signals-btn" class="bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-300 btn-center btn-vw-md">Check for Entry Signals</button>
+      </div>
     </div>
-    
+
     <div id="signals-loader" class="hidden my-4 mx-auto loader"></div>
     <div id="signals-results-container" class="mt-6 hidden">
       <h3 class="text-xl font-semibold mb-4">Live Entry Signals</h3>
@@ -110,6 +108,7 @@
             <th class="py-2 px-4 border-b text-left">Signal</th>
             <th class="py-2 px-4 border-b text-left">Z-Score</th>
             <th class="py-2 px-4 border-b text-left">Beta</th>
+            <th class="py-2 px-4 border-b text-left">Intercept</th>
             <th class="py-2 px-4 border-b text-left">ADF P-Value</th>
           </tr>
         </thead>
@@ -119,45 +118,60 @@
     </div>
   </section>
 
-  <!-- Check for Specific Exit Signal -->
+  <!-- Exit / Details Multi-Pair -->
   <section class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-2xl font-semibold mb-4">3. Check Specific Pair for Exit Signal</h2>
-      <p class="text-gray-600 mb-6">Check if a specific pair has generated an exit signal for a given date or week.</p>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end mb-6">
-          <div>
-              <label for="exit-stock-y" class="block text-sm font-medium text-gray-700 mb-1">Stock Y</label>
-              <input id="exit-stock-y" list="hist-stock-y-list" placeholder="Type to search..." autocomplete="off" class="w-full border rounded p-2 text-sm bg-gray-50">
-          </div>
-          <div>
-              <label for="exit-stock-x" class="block text-sm font-medium text-gray-700 mb-1">Stock X</label>
-              <input id="exit-stock-x" list="hist-stock-x-list" placeholder="Select Stock Y first" autocomplete="off" disabled class="w-full border rounded p-2 text-sm bg-gray-50 disabled:opacity-60">
-          </div>
-          <div>
-              <button id="run-exit-btn" class="w-full bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 transition duration-300 disabled:opacity-50" disabled>Check for Exit</button>
-          </div>
-          <div>
-              <label for="exit-date" class="block text-sm font-medium text-gray-700 mb-1">Analysis Date</label>
-              <input type="date" id="exit-date" class="w-full border rounded p-2 text-sm bg-gray-50">
-          </div>
-          <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Signal Period</label>
-              <div class="flex items-center space-x-4" id="exit-period-toggle">
-                  <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="exit_period" value="today" class="form-radio h-4 w-4 text-blue-600" checked><span class="text-gray-700">Today</span></label>
-                  <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="exit_period" value="week" class="form-radio h-4 w-4 text-blue-600"><span class="text-gray-700">This Week</span></label>
-              </div>
-          </div>
-      </div>
+    <h2 class="text-2xl font-semibold mb-4">3. Check Specific Pair for Exit/Details</h2>
+    <p class="text-gray-600 mb-6">Toggle between checking only exit signals or full details (ADF, Z-Score, etc.). Add multiple pairs to check at once.</p>
 
-      <div id="exit-loader" class="hidden my-4 mx-auto loader"></div>
-      <div id="exit-results-container" class="mt-6 hidden"></div>
+    <div class="flex flex-col md:flex-row md:items-center md:justify-center gap-4 mb-4">
+      <div class="flex items-center space-x-4" id="exit-mode-toggle">
+        <label class="flex items-center space-x-2 cursor-pointer">
+          <input type="radio" name="exit_mode" value="exit" class="form-radio h-4 w-4 text-blue-600" checked>
+          <span class="text-gray-700">Exit Only</span>
+        </label>
+        <label class="flex items-center space-x-2 cursor-pointer">
+          <input type="radio" name="exit_mode" value="details" class="form-radio h-4 w-4 text-blue-600">
+          <span class="text-gray-700">Details</span>
+        </label>
+      </div>
+      <div class="btn-center-wrapper">
+        <button type="button" id="exit-add-pair-btn" class="btn-center bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-700 transition duration-300 btn-vw-sm">+ Add Pair</button>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-end gap-4 mb-4">
+      <div>
+        <label for="exit-date" class="block text-sm font-medium text-gray-700 mb-1">Analysis Date</label>
+        <input type="date" id="exit-date" class="w-full border rounded p-2 text-sm bg-gray-50">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Signal Period</label>
+        <div class="flex items-center space-x-4" id="exit-period-toggle">
+          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="exit_period" value="today" class="form-radio h-4 w-4 text-blue-600" checked><span class="text-gray-700">Today</span></label>
+          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="exit_period" value="week" class="form-radio h-4 w-4 text-blue-600"><span class="text-gray-700">This Week</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic rows -->
+    <div id="exit-pairs-container" class="space-y-3 mb-4"></div>
+
+    <div class="btn-center-wrapper">
+      <button type="button" id="run-exit-multi-btn" class="btn-center bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition duration-300 btn-vw-md">Run</button>
+    </div>
+
+    <datalist id="exit-y-list"></datalist>
+    <datalist id="exit-x-list"></datalist>
+
+    <div id="exit-loader" class="hidden my-4 mx-auto loader"></div>
+    <div id="exit-results-container" class="mt-6 hidden"></div>
   </section>
 
   <!-- Historical Pair Analysis -->
-  <section class="bg-white p-6 rounded-lg shadow-md">
+  <section class="bg-white p-6 rounded-lg shadow-md text-center">
     <h2 class="text-2xl font-semibold mb-4">4. Historical Pair Analysis</h2>
     <p class="text-gray-600 mb-6">Select a pair to view its detailed historical backtest performance. The available pairs depend on the data source selected above.</p>
-    <div class="flex flex-col md:flex-row gap-4 items-start md:items-end mb-6">
+    <div class="flex flex-col md:flex-row gap-4 items-center md:items-end mb-6 justify-center">
       <div class="w-full md:w-1/3">
         <label for="hist-stock-y" class="block text-sm font-medium text-gray-700 mb-1">Stock Y</label>
         <input id="hist-stock-y" list="hist-stock-y-list" placeholder="Type to search..." autocomplete="off" class="w-full border rounded p-2 text-sm bg-gray-50">
@@ -168,8 +182,8 @@
         <input id="hist-stock-x" list="hist-stock-x-list" placeholder="Select Stock Y first" autocomplete="off" disabled class="w-full border rounded p-2 text-sm bg-gray-50 disabled:opacity-60">
         <datalist id="hist-stock-x-list"></datalist>
       </div>
-      <div class="w-full md:w-auto">
-        <button id="hist-analyze-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300 disabled:opacity-50" disabled>Analyze</button>
+      <div class="w-full md:w-auto btn-center-wrapper">
+        <button id="hist-analyze-btn" class="bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300 btn-center btn-vw-md disabled:opacity-50" disabled>Analyze</button>
       </div>
     </div>
     <p id="hist-selection-msg" class="text-sm text-red-500 hidden"></p>
@@ -186,31 +200,71 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const state = { source: 'all', period: 'week', pairsData: { all: [], sector: [] }, yToXs: { all: {}, sector: {} }, sortedYs: { all: [], sector: [] } };
+  const state = {
+    source: 'all',
+    period: 'week',
+    pairsData: { all: [], sector: [] },
+    yToXs: { all: {}, sector: {} },
+    sortedYs: { all: [], sector: [] },
+    exitMode: 'exit' // 'exit' | 'details'
+  };
+
   const selectors = {
-    sourceToggle: document.getElementById('source-toggle'), periodToggle: document.getElementById('period-toggle'),
-    dateInput: document.getElementById('live-date'), runEntrySignalsBtn: document.getElementById('run-entry-signals-btn'),
-    signalsLoader: document.getElementById('signals-loader'), signalsResultsContainer: document.getElementById('signals-results-container'),
-    signalsTableBody: document.getElementById('signals-table-body'), noSignalsMsg: document.getElementById('no-signals-msg'),
-    sectorCols: document.querySelectorAll('.sector-col'), exitStockY: document.getElementById('exit-stock-y'),
-    exitStockX: document.getElementById('exit-stock-x'), runExitBtn: document.getElementById('run-exit-btn'),
-    exitLoader: document.getElementById('exit-loader'), exitResultsContainer: document.getElementById('exit-results-container'),
-    exitDateInput: document.getElementById('exit-date'), exitPeriodToggle: document.getElementById('exit-period-toggle'),
-    histStockY: document.getElementById('hist-stock-y'), histStockX: document.getElementById('hist-stock-x'),
-    histYList: document.getElementById('hist-stock-y-list'), histXList: document.getElementById('hist-stock-x-list'),
-    histAnalyzeBtn: document.getElementById('hist-analyze-btn'), histSelectionMsg: document.getElementById('hist-selection-msg'),
+    // global/source
+    sourceToggle: document.getElementById('source-toggle'),
+    periodToggle: document.getElementById('period-toggle'),
+    dateInput: document.getElementById('live-date'),
+    runEntrySignalsBtn: document.getElementById('run-entry-signals-btn'),
+    signalsLoader: document.getElementById('signals-loader'),
+    signalsResultsContainer: document.getElementById('signals-results-container'),
+    signalsTableBody: document.getElementById('signals-table-body'),
+    noSignalsMsg: document.getElementById('no-signals-msg'),
+    sectorCols: document.querySelectorAll('.sector-col'),
+
+    // exit/details multi
+    exitModeToggle: document.getElementById('exit-mode-toggle'),
+    exitAddPairBtn: document.getElementById('exit-add-pair-btn'),
+    exitPairsContainer: document.getElementById('exit-pairs-container'),
+    exitRunMultiBtn: document.getElementById('run-exit-multi-btn'),
+    exitYList: document.getElementById('exit-y-list'),
+    exitXList: document.getElementById('exit-x-list'),
+    exitLoader: document.getElementById('exit-loader'),
+    exitResultsContainer: document.getElementById('exit-results-container'),
+    exitDateInput: document.getElementById('exit-date'),
+    exitPeriodToggle: document.getElementById('exit-period-toggle'),
+
+    // historical
+    histStockY: document.getElementById('hist-stock-y'),
+    histStockX: document.getElementById('hist-stock-x'),
+    histYList: document.getElementById('hist-stock-y-list'),
+    histXList: document.getElementById('hist-stock-x-list'),
+    histAnalyzeBtn: document.getElementById('hist-analyze-btn'),
+    histSelectionMsg: document.getElementById('hist-selection-msg')
   };
 
   function init() {
     const dataEl = document.getElementById('pairs-data-json');
-    if (dataEl) { try { state.pairsData = JSON.parse(dataEl.textContent.trim()); } catch (e) { console.error("Failed to parse pairs data", e); } }
-    processPairsData('all'); processPairsData('sector');
-    setupEventListeners(); updateDataSource();
+    if (dataEl) {
+      try { state.pairsData = JSON.parse(dataEl.textContent.trim()); }
+      catch (e) { console.error('Failed to parse pairs data', e); }
+    }
+    processPairsData('all');
+    processPairsData('sector');
+    setupEventListeners();
+    updateDataSource();
+    addExitPairRow(); // start with one empty row
   }
 
   function processPairsData(source) {
-    const pairs = state.pairsData[source] || []; const yToXs = {}; const allYs = new Set();
-    pairs.forEach(p => { const y = String(p.Stock_Y).trim().toUpperCase(); const x = String(p.Stock_X).trim().toUpperCase(); allYs.add(y); if (!yToXs[y]) yToXs[y] = new Set(); yToXs[y].add(x); });
+    const pairs = state.pairsData[source] || [];
+    const yToXs = {}; const allYs = new Set();
+    pairs.forEach(p => {
+      const y = String(p.Stock_Y).trim().toUpperCase();
+      const x = String(p.Stock_X).trim().toUpperCase();
+      allYs.add(y);
+      if (!yToXs[y]) yToXs[y] = new Set();
+      yToXs[y].add(x);
+    });
     state.sortedYs[source] = Array.from(allYs).sort();
     Object.keys(yToXs).forEach(y => { state.yToXs[source][y] = Array.from(yToXs[y]).sort(); });
   }
@@ -219,112 +273,274 @@ document.addEventListener('DOMContentLoaded', () => {
     selectors.sourceToggle.addEventListener('change', e => { state.source = e.target.value; updateDataSource(); });
     selectors.periodToggle.addEventListener('change', e => { state.period = e.target.value; });
     selectors.runEntrySignalsBtn.addEventListener('click', runEntrySignalAnalysis);
-    selectors.runExitBtn.addEventListener('click', runExitCheck);
-    [selectors.histStockY, selectors.exitStockY].forEach(el => el.addEventListener('input', handleYInputChange));
-    [selectors.histStockX, selectors.exitStockX].forEach(el => el.addEventListener('input', validateSelections));
+
+    // exit/details events
+    selectors.exitAddPairBtn.addEventListener('click', () => addExitPairRow());
+    selectors.exitRunMultiBtn.addEventListener('click', runExitMulti);
+    selectors.exitModeToggle.addEventListener('change', e => { if (e.target.name==='exit_mode') state.exitMode = e.target.value; });
+
+    // historical events
+    selectors.histStockY.addEventListener('input', handleHistYChange);
+    selectors.histStockX.addEventListener('input', validateHistSelections);
     selectors.histAnalyzeBtn.addEventListener('click', runHistoricalAnalysis);
   }
 
   function updateDataSource() {
     selectors.sectorCols.forEach(col => col.classList.toggle('hidden', state.source !== 'sector'));
-    [selectors.histStockY, selectors.exitStockY, selectors.histStockX, selectors.exitStockX].forEach(el => el.value = '');
-    selectors.histStockX.disabled = true; selectors.exitStockX.disabled = true;
-    populateYOptions(); validateSelections();
+    // reset historical
+    selectors.histStockY.value = '';
+    selectors.histStockX.value = '';
+    selectors.histStockX.disabled = true;
+    populateYOptions();
+    validateHistSelections();
+    // refresh exit Y datalist
+    populateExitYOptions();
+    // clear any exit rows' X suggestions (user will re-select)
+    const rows = selectors.exitPairsContainer.querySelectorAll('[data-rowid]');
+    rows.forEach(r => {
+      const xInput = r.querySelector('.exit-x-input');
+      if (xInput) xInput.value='';
+    });
   }
 
   function populateYOptions() {
-    const yOptions = state.sortedYs[state.source]; selectors.histYList.innerHTML = '';
-    yOptions.forEach(y => { const opt = document.createElement('option'); opt.value = y; selectors.histYList.appendChild(opt); });
+    const yOptions = state.sortedYs[state.source];
+    selectors.histYList.innerHTML = '';
+    yOptions.forEach(y => {
+      const opt = document.createElement('option'); opt.value = y; selectors.histYList.appendChild(opt);
+    });
   }
-  
-  function handleYInputChange(e) {
-      const isHist = e.target.id.startsWith('hist');
-      const yInput = isHist ? selectors.histStockY : selectors.exitStockY;
-      const xInput = isHist ? selectors.histStockX : selectors.exitStockX;
-      const xList = isHist ? selectors.histXList : document.getElementById('hist-stock-x-list');
-      const y = yInput.value.trim().toUpperCase(); const validY = state.sortedYs[state.source].includes(y);
-      xList.innerHTML = '';
-      if (validY) {
-          const xOptions = state.yToXs[state.source][y] || [];
-          xOptions.forEach(x => { const opt = document.createElement('option'); opt.value = x; xList.appendChild(opt); });
-          xInput.disabled = false; xInput.placeholder = "Type to search...";
-      } else {
-          xInput.value = ''; xInput.disabled = true; xInput.placeholder = "Select Stock Y first";
-      }
-      validateSelections();
+
+  function populateExitYOptions() {
+    const yOptions = state.sortedYs[state.source];
+    selectors.exitYList.innerHTML = '';
+    yOptions.forEach(y => {
+      const opt = document.createElement('option'); opt.value = y; selectors.exitYList.appendChild(opt);
+    });
   }
-  
-  function validateSelections() {
-      const histY = selectors.histStockY.value.trim().toUpperCase(); const histX = selectors.histStockX.value.trim().toUpperCase();
-      const validHistY = state.sortedYs[state.source].includes(histY); const validHistX = validHistY && state.yToXs[state.source][histY]?.includes(histX);
-      selectors.histAnalyzeBtn.disabled = !validHistX;
-      const exitY = selectors.exitStockY.value.trim().toUpperCase(); const exitX = selectors.exitStockX.value.trim().toUpperCase();
-      const validExitY = state.sortedYs[state.source].includes(exitY); const validExitX = validExitY && state.yToXs[state.source][exitY]?.includes(exitX);
-      selectors.runExitBtn.disabled = !validExitX;
+
+  function handleHistYChange() {
+    const y = selectors.histStockY.value.trim().toUpperCase();
+    const validY = state.sortedYs[state.source].includes(y);
+    selectors.histXList.innerHTML = '';
+    if (validY) {
+      const xs = state.yToXs[state.source][y] || [];
+      xs.forEach(x => { const opt = document.createElement('option'); opt.value = x; selectors.histXList.appendChild(opt); });
+      selectors.histStockX.disabled = false; selectors.histStockX.placeholder = 'Type to search...';
+    } else {
+      selectors.histStockX.value = ''; selectors.histStockX.disabled = true; selectors.histStockX.placeholder = 'Select Stock Y first';
+    }
+    validateHistSelections();
+  }
+
+  function validateHistSelections() {
+    const histY = selectors.histStockY.value.trim().toUpperCase();
+    const histX = selectors.histStockX.value.trim().toUpperCase();
+    const validHistY = state.sortedYs[state.source].includes(histY);
+    const validHistX = validHistY && state.yToXs[state.source][histY]?.includes(histX);
+    selectors.histAnalyzeBtn.disabled = !validHistX;
+  }
+
+  /*  exit row logic  */
+  let exitRowCounter = 0;
+  function addExitPairRow(prefillY='', prefillX='') {
+    const id = exitRowCounter++;
+    const row = document.createElement('div');
+    row.className = 'flex flex-col sm:flex-row items-start sm:items-end gap-3';
+    row.dataset.rowid = id;
+    row.innerHTML = `
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Stock Y</label>
+        <input type="text" list="exit-y-list" class="exit-y-input w-36 sm:w-40 border rounded p-2 text-sm bg-gray-50" placeholder="Y..." value="${prefillY}">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Stock X</label>
+        <input type="text" class="exit-x-input w-36 sm:w-40 border rounded p-2 text-sm bg-gray-50" placeholder="X..." value="${prefillX}">
+      </div>
+      <div class="btn-center-wrapper">
+        <button type="button" class="exit-rm-btn btn-center bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-xs btn-vw-sm">Remove</button>
+      </div>`;
+    selectors.exitPairsContainer.appendChild(row);
+
+    const yInput = row.querySelector('.exit-y-input');
+    const xInput = row.querySelector('.exit-x-input');
+    const rmBtn = row.querySelector('.exit-rm-btn');
+    yInput.addEventListener('input', () => handleExitYChange(yInput, xInput));
+    rmBtn.addEventListener('click', () => row.remove());
+    if (prefillY) handleExitYChange(yInput, xInput);
+  }
+
+  function handleExitYChange(yInput, xInput) {
+    const y = yInput.value.trim().toUpperCase();
+    const validY = state.sortedYs[state.source].includes(y);
+    selectors.exitXList.innerHTML = '';
+    if (validY) {
+      const xs = state.yToXs[state.source][y] || [];
+      xs.forEach(x => { const opt = document.createElement('option'); opt.value = x; selectors.exitXList.appendChild(opt); });
+      xInput.setAttribute('list','exit-x-list');
+      if (xs.length===1) xInput.value = xs[0];
+    } else {
+      xInput.removeAttribute('list');
+      xInput.value='';
+    }
   }
 
   function runEntrySignalAnalysis() {
-    const btn = selectors.runEntrySignalsBtn; btn.disabled = true; btn.textContent = 'Running...';
-    selectors.signalsLoader.classList.remove('hidden'); selectors.signalsResultsContainer.classList.add('hidden');
-    selectors.signalsTableBody.innerHTML = ''; selectors.noSignalsMsg.classList.add('hidden');
-    const url = new URL('{{ url_for("get_live_signals") }}', window.location.origin);
-    url.searchParams.set('source', state.source); url.searchParams.set('period', state.period); url.searchParams.set('signal_type', 'entry');
+    const btn = selectors.runEntrySignalsBtn;
+    btn.disabled = true; btn.textContent = 'Running...';
+    selectors.signalsLoader.classList.remove('hidden');
+    selectors.signalsResultsContainer.classList.add('hidden');
+    selectors.signalsTableBody.innerHTML = '';
+    selectors.noSignalsMsg.classList.add('hidden');
+    const url = new URL('{{ url_for('get_live_signals') }}', window.location.origin);
+    url.searchParams.set('source', state.source);
+    url.searchParams.set('period', state.period);
+    url.searchParams.set('signal_type', 'entry');
     if (selectors.dateInput.value) url.searchParams.set('date', selectors.dateInput.value);
-    fetch(url).then(r => r.json().then(data => ({ status: r.status, body: data })))
+    fetch(url)
+      .then(r => r.json().then(data => ({ status:r.status, body:data })))
       .then(res => {
         if (res.status !== 200) { alert('Error: ' + (res.body.error || 'Unknown server error')); return; }
-        const data = res.body; selectors.signalsResultsContainer.classList.remove('hidden');
+        const data = res.body;
+        selectors.signalsResultsContainer.classList.remove('hidden');
         if (!data || data.length === 0) { selectors.noSignalsMsg.classList.remove('hidden'); return; }
         data.forEach(signal => {
           const row = `<tr>
-             <td class="py-2 px-4 border-b">${signal.Date}</td>
-             <td class="py-2 px-4 border-b">${signal.Stock_Y}</td>
-             <td class="py-2 px-4 border-b">${signal.Stock_X}</td>
-             <td class="py-2 px-4 border-b sector-col ${state.source === 'sector' ? '' : 'hidden'}">${signal.Sector || ''}</td>
-             <td class="py-2 px-4 border-b">${signal.Signal}</td>
-             <td class="py-2 px-4 border-b">${signal.Z_Score}</td>
-             <td class="py-2 px-4 border-b">${signal.Beta}</td>
-             <td class="py-2 px-4 border-b">${signal.ADF_P_Value}</td>
-          </tr>`;
-          selectors.signalsTableBody.innerHTML += row;
+            <td class="py-2 px-4 border-b">${signal.Date}</td>
+            <td class="py-2 px-4 border-b">${signal.Stock_Y}</td>
+            <td class="py-2 px-4 border-b">${signal.Stock_X}</td>
+            <td class="py-2 px-4 border-b sector-col ${state.source==='sector'?'':'hidden'}">${signal.Sector||''}</td>
+            <td class="py-2 px-4 border-b">${signal.Signal}</td>
+            <td class="py-2 px-4 border-b">${signal.Z_Score}</td>
+            <td class="py-2 px-4 border-b">${signal.Beta}</td>
+            <td class="py-2 px-4 border-b">${signal.Intercept || 'N/A'}</td>  
+            <td class="py-2 px-4 border-b">${signal.ADF_P_Value}</td>`;
+          selectors.signalsTableBody.insertAdjacentHTML('beforeend', row);
         });
-      }).catch(e => alert('Network error: ' + e.message))
-      .finally(() => { btn.disabled = false; btn.textContent = 'Check for Entry Signals'; selectors.signalsLoader.classList.add('hidden'); });
+      })
+      .catch(e => alert('Network error: ' + e.message))
+      .finally(() => { btn.disabled=false; btn.textContent='Check for Entry Signals'; selectors.signalsLoader.classList.add('hidden'); });
   }
 
-  function runExitCheck() {
-      const btn = selectors.runExitBtn; btn.disabled = true; btn.textContent = 'Checking...';
-      selectors.exitLoader.classList.remove('hidden'); selectors.exitResultsContainer.classList.add('hidden');
-      selectors.exitResultsContainer.innerHTML = '';
-      const stockY = selectors.exitStockY.value.trim().toUpperCase(); const stockX = selectors.exitStockX.value.trim().toUpperCase();
-      const exitPeriod = selectors.exitPeriodToggle.querySelector('input:checked').value;
-      const url = new URL('{{ url_for("get_live_signals") }}', window.location.origin);
-      url.searchParams.set('source', state.source); url.searchParams.set('signal_type', 'exit');
-      url.searchParams.set('period', exitPeriod);
-      url.searchParams.set('stock_y', stockY); url.searchParams.set('stock_x', stockX);
-      if (selectors.exitDateInput.value) url.searchParams.set('date', selectors.exitDateInput.value);
-      fetch(url).then(r => r.json().then(data => ({ status: r.status, body: data })))
-          .then(res => {
-              selectors.exitResultsContainer.classList.remove('hidden');
-              if (res.status !== 200) { selectors.exitResultsContainer.innerHTML = `<p class="text-red-500">Error: ${res.body.error || 'Unknown server error'}</p>`; return; }
-              const data = res.body;
-              if (data && data.length > 0) {
-                  const signal = data[0];
-                  selectors.exitResultsContainer.innerHTML = `<p class="text-green-600 font-semibold">✅ Exit signal found for ${signal.Stock_Y}/${signal.Stock_X}! (Z-Score: ${signal.Z_Score}, ADF p-value: ${signal.ADF_P_Value})</p>`;
-              } else {
-                  selectors.exitResultsContainer.innerHTML = `<p class="text-gray-600">ℹ️ No exit signal found for this pair in the selected period.</p>`;
-              }
-          }).catch(e => { selectors.exitResultsContainer.classList.remove('hidden'); selectors.exitResultsContainer.innerHTML = `<p class="text-red-500">Network error: ${e.message}</p>`; })
-          .finally(() => { btn.disabled = false; btn.textContent = 'Check for Exit'; selectors.exitLoader.classList.add('hidden'); });
+  async function runExitMulti() {
+    const btn = selectors.exitRunMultiBtn;
+    btn.disabled = true; const oldTxt = btn.textContent; btn.textContent='Running...';
+    selectors.exitLoader.classList.remove('hidden'); selectors.exitResultsContainer.classList.add('hidden'); selectors.exitResultsContainer.innerHTML='';
+
+    const rows = [...selectors.exitPairsContainer.querySelectorAll('[data-rowid]')];
+    const pairs = rows.map(r => ({
+      y: r.querySelector('.exit-y-input').value.trim().toUpperCase(),
+      x: r.querySelector('.exit-x-input').value.trim().toUpperCase()
+    })).filter(p => p.y && p.x);
+    if (pairs.length===0) { alert('Add at least one valid pair.'); finishExitRun(); return; }
+
+    const period = selectors.exitPeriodToggle.querySelector('input:checked').value;
+    const dateVal = selectors.exitDateInput.value;
+    const mode = state.exitMode; // 'exit' or 'details'
+
+    const results = [];
+    for (const p of pairs) {
+      let url;
+      if (mode === 'exit') {
+        url = new URL('{{ url_for('get_live_signals') }}', window.location.origin);
+      } 
+      else {
+        url = new URL('{{ url_for('get_pair_details') }}', window.location.origin);
+      }
+      url.searchParams.set('source', state.source);
+      url.searchParams.set('signal_type', mode==='exit' ? 'exit' : 'details');
+      url.searchParams.set('period', period);
+      url.searchParams.set('stock_y', p.y); url.searchParams.set('stock_x', p.x);
+      if (dateVal) url.searchParams.set('date', dateVal);
+      try {
+        const r = await fetch(url);
+        const body = await r.json();
+        if (r.status===200 && Array.isArray(body)) {
+          body.forEach(b => results.push(b));
+          if (body.length===0) results.push({Stock_Y:p.y,Stock_X:p.x,Signal:null});
+        } else {
+          results.push({Stock_Y:p.y,Stock_X:p.x,error:body.error||'Server error'});
+        }
+      } catch(err) {
+        results.push({Stock_Y:p.y,Stock_X:p.x,error:err.message||'Network error'});
+      }
+    }
+
+    renderExitResults(results, mode);
+    finishExitRun();
+
+    function finishExitRun(){
+      btn.disabled=false; btn.textContent=oldTxt; selectors.exitLoader.classList.add('hidden'); }
   }
 
+  function renderExitResults(results, mode) {
+    selectors.exitResultsContainer.classList.remove('hidden');
+    selectors.exitResultsContainer.innerHTML='';
+    if (!results || results.length===0) {
+      selectors.exitResultsContainer.innerHTML='<p class="text-gray-600">No data returned.</p>';
+      return;
+    }
+    if (mode==='exit') {
+      const frag=document.createDocumentFragment();
+      results.forEach(sig=>{
+        const p=document.createElement('p');
+        if (sig.error) { p.className='text-red-500'; p.textContent=`Error for ${sig.Stock_Y}/${sig.Stock_X}: ${sig.error}`; }
+        else if (sig.Signal && String(sig.Signal).toLowerCase().includes('exit')) { p.className='text-green-600 font-semibold'; p.textContent=`✅ Exit signal for ${sig.Stock_Y}/${sig.Stock_X} (Z=${sig.Z_Score ?? ''}, ADF=${sig.ADF_P_Value ?? ''}).`; }
+        else { p.className='text-gray-600'; p.textContent=`ℹ️ No exit signal for ${sig.Stock_Y}/${sig.Stock_X}.`; }
+        frag.appendChild(p);
+      });
+      selectors.exitResultsContainer.appendChild(frag);
+      return;
+    }
+    if (mode === 'details') {
+      console.log("Details mode data:", results); // Debug log
+      const showSector = state.source === 'sector';
+      let thead = `<thead class="bg-gray-100"><tr>
+        <th class="py-2 px-3 border-b text-left">Date</th>
+        <th class="py-2 px-3 border-b text-left">Stock Y</th>
+        <th class="py-2 px-3 border-b text-left">Stock X</th>
+        ${showSector ? '<th class="py-2 px-3 border-b text-left">Sector</th>' : ''}
+        <th class="py-2 px-3 border-b text-left">ADF</th>
+        <th class="py-2 px-3 border-b text-left">Z-Score</th>
+        <th class="py-2 px-3 border-b text-left">Beta</th>
+      </tr></thead>`;
+
+      let tbody = '<tbody>';
+      results.forEach(sig => {
+        const adf = (sig.ADF_Value !== undefined && sig.ADF_Value !== null) ? sig.ADF_Value : 'N/A';
+        const zscore = (sig.Z_Score !== undefined && sig.Z_Score !== null) ? sig.Z_Score : 'N/A';
+        const beta = (sig.Beta !== undefined && sig.Beta !== null) ? sig.Beta : 'N/A';
+        if (sig.error) {
+          tbody += `<tr><td colspan="${showSector ? 7 : 6}" class="py-2 px-3 border-b text-red-500">Error for ${sig.Stock_Y}/${sig.Stock_X}: ${sig.error}</td></tr>`;
+        } else {
+          tbody += `<tr>
+            <td class="py-2 px-3 border-b">${sig.Date || ''}</td>
+            <td class="py-2 px-3 border-b">${sig.Stock_Y || ''}</td>
+            <td class="py-2 px-3 border-b">${sig.Stock_X || ''}</td>
+            ${showSector ? `<td class="py-2 px-3 border-b">${sig.Sector || ''}</td>` : ''}
+            <td class="py-2 px-3 border-b">${adf}</td>
+            <td class="py-2 px-3 border-b">${zscore}</td>
+            <td class="py-2 px-3 border-b">${beta}</td>
+          </tr>`;
+        }
+      });
+      tbody += '</tbody>';
+      selectors.exitResultsContainer.innerHTML = `<h3 class="text-xl font-semibold mb-4">Details</h3>
+        <div class="overflow-x-auto"><table class="min-w-full bg-white border border-gray-200 rounded-lg">${thead}${tbody}</table></div>`;
+    }
+  }
+
+  
   function runHistoricalAnalysis() {
-    const y = selectors.histStockY.value.trim().toUpperCase(); const x = selectors.histStockX.value.trim().toUpperCase();
+    const y=selectors.histStockY.value.trim().toUpperCase();
+    const x=selectors.histStockX.value.trim().toUpperCase();
     if (selectors.histAnalyzeBtn.disabled) return;
     const url = new URL(`/analyze/${encodeURIComponent(y)}/${encodeURIComponent(x)}`, window.location.origin);
-    url.searchParams.set('source', state.source); window.location.href = url.toString();
+    url.searchParams.set('source', state.source);
+    window.location.href = url.toString();
   }
 
+  // kick off
   init();
 });
 </script>
