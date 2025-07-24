@@ -86,7 +86,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Signal Period</label>
         <div class="flex items-center space-x-4" id="period-toggle">
-          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="period" value="today" class="form-radio h-4 w-4 text-blue-600"><span class="text-gray-700">Daily</span></label>
+          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="period" value="today" class="form-radio h-4 w-4 text-blue-600"><span class="text-gray-700">Today</span></label>
           <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="period" value="week" class="form-radio h-4 w-4 text-blue-600" checked><span class="text-gray-700">This Week</span></label>
         </div>
       </div>
@@ -147,8 +147,8 @@
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Signal Period</label>
         <div class="flex items-center space-x-4" id="exit-period-toggle">
-          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="exit_period" value="today" class="form-radio h-4 w-4 text-blue-600" checked><span class="text-gray-700">Daily</span></label>
-          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="exit_period" value="week" class="form-radio h-4 w-4 text-blue-600"><span class="text-gray-700">This Week</span></label>
+          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="exit_period" value="today" title="View signals for the selected date" class="form-radio h-4 w-4 text-blue-600" checked><span class="text-gray-700"> Daily </span></label>
+          <label class="flex items-center space-x-2 cursor-pointer"><input type="radio" name="exit_period" value="week" title="View signals over the past 7 trading days" class="form-radio h-4 w-4 text-blue-600"><span class="text-gray-700"> This Week </span></label>
         </div>
       </div>
     </div>
@@ -242,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     histSelectionMsg: document.getElementById('hist-selection-msg')
   };
 
+  
   function init() {
     const dataEl = document.getElementById('pairs-data-json');
     if (dataEl) {
@@ -254,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDataSource();
     addExitPairRow(); // start with one empty row
   }
+
 
   function processPairsData(source) {
     const pairs = state.pairsData[source] || [];
@@ -268,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.sortedYs[source] = Array.from(allYs).sort();
     Object.keys(yToXs).forEach(y => { state.yToXs[source][y] = Array.from(yToXs[y]).sort(); });
   }
+
 
   function setupEventListeners() {
     selectors.sourceToggle.addEventListener('change', e => { state.source = e.target.value; updateDataSource(); });
@@ -285,23 +288,24 @@ document.addEventListener('DOMContentLoaded', () => {
     selectors.histAnalyzeBtn.addEventListener('click', runHistoricalAnalysis);
   }
 
+  
   function updateDataSource() {
     selectors.sectorCols.forEach(col => col.classList.toggle('hidden', state.source !== 'sector'));
-    // reset historical
     selectors.histStockY.value = '';
     selectors.histStockX.value = '';
     selectors.histStockX.disabled = true;
     populateYOptions();
     validateHistSelections();
-    // refresh exit Y datalist
+    
     populateExitYOptions();
-    // clear any exit rows' X suggestions (user will re-select)
+    
     const rows = selectors.exitPairsContainer.querySelectorAll('[data-rowid]');
     rows.forEach(r => {
       const xInput = r.querySelector('.exit-x-input');
       if (xInput) xInput.value='';
     });
   }
+
 
   function populateYOptions() {
     const yOptions = state.sortedYs[state.source];
@@ -310,6 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const opt = document.createElement('option'); opt.value = y; selectors.histYList.appendChild(opt);
     });
   }
+
 
   function populateExitYOptions() {
     const yOptions = state.sortedYs[state.source];
@@ -341,7 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
     selectors.histAnalyzeBtn.disabled = !validHistX;
   }
 
-  /*  exit row logic  */
   let exitRowCounter = 0;
   function addExitPairRow(prefillY='', prefillX='') {
     const id = exitRowCounter++;
@@ -385,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
   function runEntrySignalAnalysis() {
     const btn = selectors.runEntrySignalsBtn;
     btn.disabled = true; btn.textContent = 'Running...';
@@ -392,35 +397,69 @@ document.addEventListener('DOMContentLoaded', () => {
     selectors.signalsResultsContainer.classList.add('hidden');
     selectors.signalsTableBody.innerHTML = '';
     selectors.noSignalsMsg.classList.add('hidden');
+
     const url = new URL('{{ url_for('get_live_signals') }}', window.location.origin);
     url.searchParams.set('source', state.source);
     url.searchParams.set('period', state.period);
     url.searchParams.set('signal_type', 'entry');
     if (selectors.dateInput.value) url.searchParams.set('date', selectors.dateInput.value);
+
     fetch(url)
-      .then(r => r.json().then(data => ({ status:r.status, body:data })))
+      .then(r => r.json().then(data => ({ status: r.status, body: data })))
       .then(res => {
-        if (res.status !== 200) { alert('Error: ' + (res.body.error || 'Unknown server error')); return; }
+        if (res.status !== 200) {
+          alert('Error: ' + (res.body.error || 'Unknown server error'));
+          return;
+        }
+
         const data = res.body;
         selectors.signalsResultsContainer.classList.remove('hidden');
-        if (!data || data.length === 0) { selectors.noSignalsMsg.classList.remove('hidden'); return; }
+
+        if (!data || data.length === 0) {
+          selectors.noSignalsMsg.classList.remove('hidden');
+          return;
+        }
+
         data.forEach(signal => {
-          const row = `<tr>
-            <td class="py-2 px-4 border-b">${signal.Date}</td>
-            <td class="py-2 px-4 border-b">${signal.Stock_Y}</td>
-            <td class="py-2 px-4 border-b">${signal.Stock_X}</td>
-            <td class="py-2 px-4 border-b sector-col ${state.source==='sector'?'':'hidden'}">${signal.Sector||''}</td>
-            <td class="py-2 px-4 border-b">${signal.Signal}</td>
-            <td class="py-2 px-4 border-b">${signal.Z_Score}</td>
-            <td class="py-2 px-4 border-b">${signal.Beta}</td>
-            <td class="py-2 px-4 border-b">${signal.Intercept || 'N/A'}</td>  
-            <td class="py-2 px-4 border-b">${signal.ADF_P_Value}</td>`;
-          selectors.signalsTableBody.insertAdjacentHTML('beforeend', row);
+          const row = document.createElement('tr');
+
+          const cols = [
+            signal.Date || '',
+            signal.Stock_Y || '',
+            signal.Stock_X || '',
+          ];
+
+          if (state.source === 'sector') {
+            cols.push(signal.Sector || '');
+          }
+
+          cols.push(
+            signal.Signal || '',
+            signal.Z_Score ?? 'N/A',
+            signal.Beta ?? 'N/A',
+            signal.Intercept ?? 'N/A',
+            signal.ADF_P_Value ?? 'N/A'
+          );
+
+          cols.forEach(cell => {
+            const td = document.createElement('td');
+            td.className = 'py-2 px-4 border-b';
+            td.textContent = cell;
+            row.appendChild(td);
+          });
+
+          selectors.signalsTableBody.appendChild(row);
         });
       })
       .catch(e => alert('Network error: ' + e.message))
-      .finally(() => { btn.disabled=false; btn.textContent='Check for Entry Signals'; selectors.signalsLoader.classList.add('hidden'); });
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = 'Check for Entry Signals';
+        selectors.signalsLoader.classList.add('hidden');
+      });
   }
+
+
 
   async function runExitMulti() {
     const btn = selectors.exitRunMultiBtn;
@@ -473,25 +512,45 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled=false; btn.textContent=oldTxt; selectors.exitLoader.classList.add('hidden'); }
   }
 
+ 
   function renderExitResults(results, mode) {
     selectors.exitResultsContainer.classList.remove('hidden');
-    selectors.exitResultsContainer.innerHTML='';
-    if (!results || results.length===0) {
-      selectors.exitResultsContainer.innerHTML='<p class="text-gray-600">No data returned.</p>';
+    selectors.exitResultsContainer.innerHTML = '';
+    if (!results || results.length === 0) {
+      selectors.exitResultsContainer.innerHTML = '<p class="text-gray-600">No data returned.</p>';
       return;
     }
-    if (mode==='exit') {
-      const frag=document.createDocumentFragment();
-      results.forEach(sig=>{
-        const p=document.createElement('p');
-        if (sig.error) { p.className='text-red-500'; p.textContent=`Error for ${sig.Stock_Y}/${sig.Stock_X}: ${sig.error}`; }
-        else if (sig.Signal && String(sig.Signal).toLowerCase().includes('exit')) { p.className='text-green-600 font-semibold'; p.textContent=`✅ Exit signal for ${sig.Stock_Y}/${sig.Stock_X} (Z=${sig.Z_Score ?? ''}, ADF=${sig.ADF_P_Value ?? ''}).`; }
-        else { p.className='text-gray-600'; p.textContent=`ℹ️ No exit signal for ${sig.Stock_Y}/${sig.Stock_X}.`; }
+
+    if (mode === 'exit') {
+      const frag = document.createDocumentFragment();
+      results.forEach(sig => {
+        const p = document.createElement('p');
+
+        if (sig.error) {
+          p.className = 'text-red-500';
+          p.textContent = `Error for ${sig.Stock_Y}/${sig.Stock_X}: ${sig.error}`;
+        } else if (sig.Signal && /exit|stop/i.test(sig.Signal)) {
+          const isStop = /stop/i.test(sig.Signal);
+          const reason = isStop ? 'Stop Loss' : 'Target Achieved';
+          const zScore = sig.Z_Score ?? '';
+          const adf = sig.ADF_P_Value ?? '';
+          const beta = sig.Beta ?? '';
+          const date = sig.Date ?? '';
+          const symbol = isStop ? '🛑 Stop Loss' : '✅ Exit';
+          p.className = isStop ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold';
+          p.textContent = `${symbol} signal for ${sig.Stock_Y}/${sig.Stock_X} on ${date} (Z=${zScore}, ADF=${adf}, Beta=${beta}) → Reason: ${reason}`;
+        } else {
+          p.className = 'text-gray-600';
+          p.textContent = `ℹ️ No exit signal for ${sig.Stock_Y}/${sig.Stock_X}.`;
+        }
+
         frag.appendChild(p);
       });
       selectors.exitResultsContainer.appendChild(frag);
       return;
     }
+
+
     if (mode === 'details') {
       console.log("Details mode data:", results); // Debug log
       const showSector = state.source === 'sector';
@@ -503,15 +562,21 @@ document.addEventListener('DOMContentLoaded', () => {
         <th class="py-2 px-3 border-b text-left">ADF</th>
         <th class="py-2 px-3 border-b text-left">Z-Score</th>
         <th class="py-2 px-3 border-b text-left">Beta</th>
+        <th class="py-2 px-3 border-b text-left">Reason</th>
       </tr></thead>`;
 
       let tbody = '<tbody>';
       results.forEach(sig => {
-        const adf = (sig.ADF_Value !== undefined && sig.ADF_Value !== null) ? sig.ADF_Value : 'N/A';
+        const adf = (sig.ADF_P_Value !== undefined && sig.ADF_P_Value !== null) ? sig.ADF_P_Value : 'N/A';
         const zscore = (sig.Z_Score !== undefined && sig.Z_Score !== null) ? sig.Z_Score : 'N/A';
         const beta = (sig.Beta !== undefined && sig.Beta !== null) ? sig.Beta : 'N/A';
+
+        let reason = '-';
+        if (sig.Signal && /stop/i.test(sig.Signal)) reason = 'Stop Loss';
+        else if (sig.Signal && sig.Signal.toLowerCase() === 'exit') reason = 'Target Achieved';
+
         if (sig.error) {
-          tbody += `<tr><td colspan="${showSector ? 7 : 6}" class="py-2 px-3 border-b text-red-500">Error for ${sig.Stock_Y}/${sig.Stock_X}: ${sig.error}</td></tr>`;
+          tbody += `<tr><td colspan="${showSector ? 8 : 7}" class="py-2 px-3 border-b text-red-500">Error for ${sig.Stock_Y}/${sig.Stock_X}: ${sig.error}</td></tr>`;
         } else {
           tbody += `<tr>
             <td class="py-2 px-3 border-b">${sig.Date || ''}</td>
@@ -521,16 +586,21 @@ document.addEventListener('DOMContentLoaded', () => {
             <td class="py-2 px-3 border-b">${adf}</td>
             <td class="py-2 px-3 border-b">${zscore}</td>
             <td class="py-2 px-3 border-b">${beta}</td>
+            <td class="py-2 px-3 border-b">${reason}</td>
           </tr>`;
         }
       });
       tbody += '</tbody>';
-      selectors.exitResultsContainer.innerHTML = `<h3 class="text-xl font-semibold mb-4">Details</h3>
-        <div class="overflow-x-auto"><table class="min-w-full bg-white border border-gray-200 rounded-lg">${thead}${tbody}</table></div>`;
+
+      selectors.exitResultsContainer.innerHTML = `
+        <h3 class="text-xl font-semibold mb-4">Details</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200 rounded-lg">${thead}${tbody}</table>
+        </div>`;
     }
   }
 
-  
+
   function runHistoricalAnalysis() {
     const y=selectors.histStockY.value.trim().toUpperCase();
     const x=selectors.histStockX.value.trim().toUpperCase();
