@@ -15,7 +15,7 @@ from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
-app.secret_key = "a-very-secret-key-that-should-be-changed"
+app.secret_key = "anything"
 
 
 DATA_DIR = os.path.join(app.root_path, "data")
@@ -79,104 +79,119 @@ def download_data(stocks, start_date, end_date):
     return df
 
 
-Z_ENTRY, Z_EXIT = 2.5, 1
+Z_ENTRY, Z_EXIT, Z_SL = 2.5, 1, 3
 
-def evaluate_pair_for_signals(price_df, stock_x, stock_y, asof_dt, all_signals=True, sector=None):
-    if price_df is None or price_df.empty: return None
-    price_df = price_df.loc[price_df.index <= asof_dt]
-    if len(price_df) < 30 or stock_x not in price_df.columns or stock_y not in price_df.columns: return None
-    y, X = price_df[stock_y], sm.add_constant(price_df[stock_x])
-    try:
-        model = sm.OLS(y, X).fit()
-    except Exception:
-        return None
-    resid, std_resid = model.resid, float(np.std(model.resid))
-    if std_resid < 1e-8: return None
-    latest_day = price_df.index[-1]
-    y_i, x_i = float(price_df.loc[latest_day, stock_y]), float(price_df.loc[latest_day, stock_x])
-    intercept, beta = model.params
-    z_score = (y_i - (intercept + beta * x_i)) / std_resid
-    if z_score > Z_ENTRY: signal = "Entry Short"
-    elif z_score < -Z_ENTRY: signal = "Entry Long"
-    elif -Z_EXIT < z_score < Z_EXIT: signal = "Exit"
-    else: return None
-    try:
-        p_adf = adfuller(resid)[1]
-        if p_adf >= 0.05: return None
-    except Exception:
-        return None
-    signal_data = {
-        "Date": latest_day.strftime("%d-%m-%Y"), "Stock_Y": stock_y, "Stock_X": stock_x, 
-        "Signal": signal, "Z_Score": round(float(z_score), 2), 
-        "Beta": round(float(beta), 2), "Intercept": round(float(intercept), 2), "ADF_P_Value": f"{p_adf:.4f}"
-    }
-    if sector: signal_data["Sector"] = sector
-    return signal_data
-
-def run_check_for_pair_worker(pair_tuple, asof_dt):
-    stock_y, stock_x, sector = pair_tuple[0], pair_tuple[1], (pair_tuple[2] if len(pair_tuple) > 2 else None)
-    end_date, start_date = asof_dt + timedelta(days=1), asof_dt - timedelta(days=500)
-    price_df = download_data([stock_x, stock_y], start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
-    return evaluate_pair_for_signals(price_df, stock_x, stock_y, asof_dt, sector) if price_df is not None else None
-
-def _safe_format(value, format_spec):
-    if pd.isna(value) or value == '': return ''
-    try: return f"{float(value):{format_spec}}"
-    except (ValueError, TypeError): return str(value)
-
-def evaluate_for_day(pairs_to_process, price_df_all, day):
-    results = []
-    for p in pairs_to_process:
-        stock_y, stock_x = p[0], p[1]
-        sector = p[2] if len(p) > 2 else None
-        sub_df = price_df_all[[stock_x, stock_y]].copy()
-        signal = evaluate_pair_for_signals(sub_df, stock_x, stock_y, day, sector=sector)
-        if signal:
-            results.append(signal)
-    return results
-
-
-def compute_details_for_day(price_df, stock_y, stock_x, current_day, window_size=60):
-    if current_day not in price_df.index:
+def evaluate_pair_for_signals(price_df, stock_x, stock_y, asof_dt, all_signals=True, sector=None, want_entry=False):
+    if price_df is None or price_df.empty:
         return None
 
-    # Filter only data up to current_day
-    sub_df = price_df.loc[price_df.index <= current_day]
-    if len(sub_df) < window_size:
-        return None  # Not enough data
+    price_df = price_df.loc[price_df.index <= asof_dt].iloc[-500:]
+    if len(price_df) < 30 or stock_x not in price_df.columns or stock_y not in price_df.columns:
+        return None
 
-    sub_df = sub_df.iloc[-window_size:]  # rolling window
-
-    y = sub_df[stock_y]
-    X = sm.add_constant(sub_df[stock_x])
-
+    y = price_df[stock_y]
+    X = sm.add_constant(price_df[stock_x])
     try:
         model = sm.OLS(y, X).fit()
     except Exception:
         return None
 
     resid = model.resid
+    std_resid = float(np.std(resid))
+    if std_resid < 1e-8:
+        return None
+
+    latest_day = pd.to_datetime(asof_dt)
+    if latest_day not in price_df.index:
+        return None
+
     try:
-        p_adf = adfuller(resid)[1]  
+        y_i = float(price_df.loc[latest_day, stock_y])
+        x_i = float(price_df.loc[latest_day, stock_x])
+    except Exception:
+        return None
+
+    intercept, beta = model.params
+    z_score = (y_i - (intercept + beta * x_i)) / std_resid
+
+    
+    try:
+        p_adf = adfuller(resid)[1]
     except Exception:
         p_adf = None
 
-    # Computation of z-score using the latest values
-    y_val = float(sub_df[stock_y].iloc[-1])
-    x_val = float(sub_df[stock_x].iloc[-1])
-    intercept, beta = model.params
-    std_resid = float(np.std(resid))
-    z_score = (y_val - (intercept + beta * x_val)) / std_resid if std_resid > 1e-8 else 0.0
+    
+    if not want_entry:
+        return {
+            "Date": latest_day.strftime("%d-%m-%Y"),
+            "Stock_Y": stock_y,
+            "Stock_X": stock_x,
+            "Signal": None,
+            "Z_Score": round(float(z_score), 2),
+            "Beta": round(float(beta), 2),
+            "Intercept": round(float(intercept), 2),
+            "ADF_P_Value": f"{p_adf:.4f}" if p_adf is not None else "N/A"
+        }
 
-    return {
-        "Date": current_day.strftime("%d-%m-%Y"),
+    # Signal logic
+    if abs(z_score) > Z_SL:
+        signal = "Stop Loss"
+    elif z_score > Z_ENTRY:
+        signal = "Entry Short"
+    elif z_score < -Z_ENTRY:
+        signal = "Entry Long"
+    elif -Z_EXIT < z_score < Z_EXIT:
+        signal = "Exit"
+    else:
+        return None
+
+    # For entry signals, check ADF condition
+    if signal.lower().startswith("entry") and (p_adf is None or p_adf >= 0.05):
+        return None
+
+    signal_data = {
+        "Date": latest_day.strftime("%d-%m-%Y"),
         "Stock_Y": stock_y,
         "Stock_X": stock_x,
-        "ADF_Value": round(p_adf, 4) if p_adf is not None else "N/A",
-        "Z_Score": round(z_score, 2),
-        "Beta": round(beta, 2),
-        "Intercept": round(intercept, 2)
+        "Signal": signal,
+        "Z_Score": round(float(z_score), 2),
+        "Beta": round(float(beta), 2),
+        "Intercept": round(float(intercept), 2),
+        "ADF_P_Value": f"{p_adf:.4f}" if p_adf is not None else "N/A"
     }
+    if sector:
+        signal_data["Sector"] = sector
+
+    return signal_data
+
+
+
+def run_check_for_pair_worker(pair_tuple, asof_dt, want_entry=True):
+    stock_y, stock_x, sector = pair_tuple[0], pair_tuple[1], (pair_tuple[2] if len(pair_tuple) > 2 else None)
+    end_date, start_date = asof_dt + timedelta(days=1), asof_dt - timedelta(days=500)
+    price_df = download_data([stock_x, stock_y], start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
+    return evaluate_pair_for_signals(price_df, stock_x, stock_y, asof_dt, sector=sector, want_entry=want_entry) if price_df is not None else None
+
+def _safe_format(value, format_spec):
+    if pd.isna(value) or value == '': return ''
+    try: return f"{float(value):{format_spec}}"
+    except (ValueError, TypeError): return str(value)
+
+
+def evaluate_for_day(pairs_to_process, price_df_all, day, want_entry=True):
+    results = []
+    for p in pairs_to_process:
+        stock_y, stock_x = p[0], p[1]
+        sector = p[2] if len(p) > 2 else None
+        sub_df = price_df_all[[stock_x, stock_y]].copy()
+        signal = evaluate_pair_for_signals(sub_df, stock_x, stock_y, day, sector=sector, want_entry=want_entry)
+        if signal:
+            results.append(signal)
+    return results
+
+
+
+
 
 #Flask Routes
 @app.route("/")
@@ -245,10 +260,8 @@ def get_live_signals():
     else:
         pairs_to_process = list(df[required_cols].itertuples(index=False, name=None))
 
-    # Entry/Exit Logic
     all_signals = []
 
-    # Collect all stocks for bulk download
     unique_stocks = set([p[0] for p in pairs_to_process] + [p[1] for p in pairs_to_process])
     price_start_date = (asof_dt - timedelta(days=500)).strftime("%Y-%m-%d")
     price_end_date = (asof_dt + timedelta(days=1)).strftime("%Y-%m-%d")
@@ -257,75 +270,91 @@ def get_live_signals():
     if price_df_all is None or price_df_all.empty:
         return jsonify({"error": "Price data could not be loaded."}), 404
 
-    
-
     if period == 'today':
-        all_signals = evaluate_for_day(pairs_to_process, price_df_all, asof_dt)
+        all_signals = evaluate_for_day(pairs_to_process, price_df_all, asof_dt, want_entry=True)
     else:
-        # Past 7 trading days (skip weekends)
         current_day = asof_dt
         for _ in range(7):
             if current_day.weekday() < 5 and current_day in price_df_all.index:
-                all_signals.extend(evaluate_for_day(pairs_to_process, price_df_all, current_day))
+                all_signals.extend(evaluate_for_day(pairs_to_process, price_df_all, current_day, want_entry=True))
             current_day -= timedelta(days=1)
 
-    filtered_signals = [s for s in all_signals if signal_type in s['Signal'].lower()] if signal_type != 'all' else all_signals
+    if signal_type == 'all':
+        filtered_signals = [s for s in all_signals if s and s.get('Signal')]
+    elif signal_type == 'exit':
+        filtered_signals = [s for s in all_signals if s and s.get('Signal') and ('exit' in s['Signal'].lower() or 'stop' in s['Signal'].lower())]
+    else:
+        filtered_signals = [s for s in all_signals if s and s.get('Signal') and signal_type in s['Signal'].lower()]
 
     if period == 'today':
         final_signals = [s for s in filtered_signals if datetime.strptime(s['Date'], '%d-%m-%Y').date() == asof_dt.date()]
     else:
-        final_signals = filtered_signals  # Already aggregated for past 7 days
+        final_signals = filtered_signals
 
     return jsonify(final_signals)
+
+
 
 
 @app.route("/get_pair_details")
 def get_pair_details():
     stock_y = request.args.get('stock_y')
     stock_x = request.args.get('stock_x')
-    source = request.args.get('source', 'all')
-    period = request.args.get("period", "today")
     date_str = request.args.get("date", "").strip()
-    if date_str == None:
-        today_dt = datetime.now()
-        asof_dt = datetime.strptime(today_dt, "%Y-%m-%d")
-    else:
-        try:
-            asof_dt = datetime.strptime(date_str, "%Y-%m-%d")
-        except ValueError:
-            return jsonify({"error": f"Invalid date format: {date_str}"}), 400
-        
+    period = request.args.get("period", "today")
 
     if not stock_y or not stock_x or not date_str:
         return jsonify({"error": "Missing stock_y, stock_x or date parameter."}), 400
 
-    
+    try:
+        asof_dt = datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        return jsonify({"error": f"Invalid date format: {date_str}"}), 400
 
-    # Load price data once
-    start_date = (asof_dt - timedelta(days=500)).strftime("%Y-%m-%d")
-    end_date = (asof_dt + timedelta(days=1)).strftime("%Y-%m-%d")
-    price_df = download_data([stock_x, stock_y], start_date, end_date)
-    if price_df is None or price_df.empty:
-        return jsonify({"error": "No price data found."}), 404
-
-    
+    def get_details_for_date(target_date):
+        start_date = (target_date - timedelta(days=500)).strftime("%Y-%m-%d")
+        end_date = (target_date + timedelta(days=1)).strftime("%Y-%m-%d")
+        price_df = download_data([stock_x, stock_y], start_date, end_date)
+        if price_df is None or price_df.empty:
+            return None
+        price_df.index = pd.to_datetime(price_df.index)
+        valid_days = price_df.index[price_df.index <= target_date]
+        if valid_days.empty:
+            return None
+        latest_valid_day = valid_days[-1]
+        return evaluate_pair_for_signals(price_df, stock_x, stock_y, latest_valid_day, want_entry=False)
 
     if period == "week":
-        results = []
+        details_list = []
         current_day = asof_dt
-        for _ in range(7):
-            if current_day.weekday() < 5:  # Skip weekends
-                res = compute_details_for_day(price_df, stock_y, stock_x, current_day)
-                if res:
-                    results.append(res)
+        days_checked = 0
+        while len(details_list) < 5 and days_checked < 10:
+            if current_day.weekday() < 5:
+                detail = get_details_for_date(current_day)
+                if detail:
+                    details_list.append(detail)
             current_day -= timedelta(days=1)
-        return jsonify(results)
+            days_checked += 1
+
+        if not details_list:
+            return jsonify({"error": "No valid trading data found for the selected week."}), 404
+        return jsonify(details_list)
 
     # Default: period == today
-    detail = compute_details_for_day(price_df, stock_y, stock_x, asof_dt)
+    detail = get_details_for_date(asof_dt)
     if not detail:
-        return jsonify({"error": f"No data for {asof_dt.strftime('%d-%m-%Y')}"}), 404
+        for offset in range(1, 5):
+            fallback_day = asof_dt - timedelta(days=offset)
+            detail = get_details_for_date(fallback_day)
+            if detail:
+                break
+    if not detail:
+        return jsonify({"error": f"No valid data found near {asof_dt.strftime('%d-%m-%Y')}"}), 404
     return jsonify([detail])
+
+
+
+
 
 
 @app.route("/analyze/<stock_y>/<stock_x>")
