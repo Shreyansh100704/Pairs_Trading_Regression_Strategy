@@ -124,6 +124,60 @@ def _safe_format(value, format_spec):
     try: return f"{float(value):{format_spec}}"
     except (ValueError, TypeError): return str(value)
 
+def evaluate_for_day(pairs_to_process, price_df_all, day):
+    results = []
+    for p in pairs_to_process:
+        stock_y, stock_x = p[0], p[1]
+        sector = p[2] if len(p) > 2 else None
+        sub_df = price_df_all[[stock_x, stock_y]].copy()
+        signal = evaluate_pair_for_signals(sub_df, stock_x, stock_y, day, sector=sector)
+        if signal:
+            results.append(signal)
+    return results
+
+
+def compute_details_for_day(price_df, stock_y, stock_x, current_day, window_size=60):
+    if current_day not in price_df.index:
+        return None
+
+    # Filter only data up to current_day
+    sub_df = price_df.loc[price_df.index <= current_day]
+    if len(sub_df) < window_size:
+        return None  # Not enough data
+
+    sub_df = sub_df.iloc[-window_size:]  # rolling window
+
+    y = sub_df[stock_y]
+    X = sm.add_constant(sub_df[stock_x])
+
+    try:
+        model = sm.OLS(y, X).fit()
+    except Exception:
+        return None
+
+    resid = model.resid
+    try:
+        p_adf = adfuller(resid)[1]  
+    except Exception:
+        p_adf = None
+
+    # Computation of z-score using the latest values
+    y_val = float(sub_df[stock_y].iloc[-1])
+    x_val = float(sub_df[stock_x].iloc[-1])
+    intercept, beta = model.params
+    std_resid = float(np.std(resid))
+    z_score = (y_val - (intercept + beta * x_val)) / std_resid if std_resid > 1e-8 else 0.0
+
+    return {
+        "Date": current_day.strftime("%d-%m-%Y"),
+        "Stock_Y": stock_y,
+        "Stock_X": stock_x,
+        "ADF_Value": round(p_adf, 4) if p_adf is not None else "N/A",
+        "Z_Score": round(z_score, 2),
+        "Beta": round(beta, 2),
+        "Intercept": round(intercept, 2)
+    }
+
 #Flask Routes
 @app.route("/")
 def index():
@@ -159,11 +213,13 @@ def get_live_signals():
     period = request.args.get('period', 'week')
     signal_type = request.args.get('signal_type', 'entry').lower()
     date_str = request.args.get("date", "").strip()
-
-    try:
-        asof_dt = datetime.strptime(date_str, "%Y-%m-%d") if date_str else datetime.now()
-    except ValueError:
-        return jsonify({"error": f"Invalid date format: {date_str}"}), 400
+    if date_str:
+        try:
+            asof_dt = datetime.strptime(date_str, "%Y-%m-%d")
+        except ValueError:
+            return jsonify({"error": f"Invalid date format: {date_str}"}), 400
+    else:
+        asof_dt = datetime.now()
 
     is_sector_mode = source == 'sector'
     file_path = CORRELATED_SECTOR_FILE if is_sector_mode else CORRELATED_FILE
@@ -189,7 +245,7 @@ def get_live_signals():
     else:
         pairs_to_process = list(df[required_cols].itertuples(index=False, name=None))
 
-    #Entry/Exit Logic
+    # Entry/Exit Logic
     all_signals = []
 
     # Collect all stocks for bulk download
@@ -201,25 +257,16 @@ def get_live_signals():
     if price_df_all is None or price_df_all.empty:
         return jsonify({"error": "Price data could not be loaded."}), 404
 
-    def evaluate_for_day(day):
-        results = []
-        for p in pairs_to_process:
-            stock_y, stock_x = p[0], p[1]
-            sector = p[2] if len(p) > 2 else None
-            sub_df = price_df_all[[stock_x, stock_y]].copy()
-            signal = evaluate_pair_for_signals(sub_df, stock_x, stock_y, day, sector=sector)
-            if signal:
-                results.append(signal)
-        return results
+    
 
     if period == 'today':
-        all_signals = evaluate_for_day(asof_dt)
+        all_signals = evaluate_for_day(pairs_to_process, price_df_all, asof_dt)
     else:
         # Past 7 trading days (skip weekends)
         current_day = asof_dt
         for _ in range(7):
             if current_day.weekday() < 5 and current_day in price_df_all.index:
-                all_signals.extend(evaluate_for_day(current_day))
+                all_signals.extend(evaluate_for_day(pairs_to_process, price_df_all, current_day))
             current_day -= timedelta(days=1)
 
     filtered_signals = [s for s in all_signals if signal_type in s['Signal'].lower()] if signal_type != 'all' else all_signals
@@ -227,7 +274,7 @@ def get_live_signals():
     if period == 'today':
         final_signals = [s for s in filtered_signals if datetime.strptime(s['Date'], '%d-%m-%Y').date() == asof_dt.date()]
     else:
-        final_signals = filtered_signals  
+        final_signals = filtered_signals  # Already aggregated for past 7 days
 
     return jsonify(final_signals)
 
@@ -236,57 +283,49 @@ def get_live_signals():
 def get_pair_details():
     stock_y = request.args.get('stock_y')
     stock_x = request.args.get('stock_x')
-    date_str = request.args.get("date", "").strip()
     source = request.args.get('source', 'all')
+    period = request.args.get("period", "today")
+    date_str = request.args.get("date", "").strip()
+    if date_str == None:
+        today_dt = datetime.now()
+        asof_dt = datetime.strptime(today_dt, "%Y-%m-%d")
+    else:
+        try:
+            asof_dt = datetime.strptime(date_str, "%Y-%m-%d")
+        except ValueError:
+            return jsonify({"error": f"Invalid date format: {date_str}"}), 400
+        
 
     if not stock_y or not stock_x or not date_str:
         return jsonify({"error": "Missing stock_y, stock_x or date parameter."}), 400
 
-    try:
-        asof_dt = datetime.strptime(date_str, "%Y-%m-%d")
-    except ValueError:
-        return jsonify({"error": f"Invalid date format: {date_str}"}), 400
+    
 
-    # Load price data for both stocks
+    # Load price data once
     start_date = (asof_dt - timedelta(days=500)).strftime("%Y-%m-%d")
     end_date = (asof_dt + timedelta(days=1)).strftime("%Y-%m-%d")
     price_df = download_data([stock_x, stock_y], start_date, end_date)
     if price_df is None or price_df.empty:
         return jsonify({"error": "No price data found."}), 404
 
-    if asof_dt not in price_df.index:
+    
+
+    if period == "week":
+        results = []
+        current_day = asof_dt
+        for _ in range(7):
+            if current_day.weekday() < 5:  # Skip weekends
+                res = compute_details_for_day(price_df, stock_y, stock_x, current_day)
+                if res:
+                    results.append(res)
+            current_day -= timedelta(days=1)
+        return jsonify(results)
+
+    # Default: period == today
+    detail = compute_details_for_day(price_df, stock_y, stock_x, asof_dt)
+    if not detail:
         return jsonify({"error": f"No data for {asof_dt.strftime('%d-%m-%Y')}"}), 404
-
-    # OLS regression
-    y = price_df[stock_y]
-    X = sm.add_constant(price_df[stock_x])
-    try:
-        model = sm.OLS(y, X).fit()
-    except Exception as e:
-        return jsonify({"error": f"OLS regression failed: {e}"}), 500
-
-    resid = model.resid
-    try:
-        p_adf = adfuller(resid)[1]
-    except Exception:
-        p_adf = None
-
-    y_val = float(price_df.loc[asof_dt, stock_y])
-    x_val = float(price_df.loc[asof_dt, stock_x])
-    intercept, beta = model.params
-    std_resid = float(np.std(resid))
-    z_score = (y_val - (intercept + beta * x_val)) / std_resid if std_resid > 1e-8 else 0.0
-
-    details = {
-        "Date": asof_dt.strftime("%d-%m-%Y"),
-        "Stock_Y": stock_y,
-        "Stock_X": stock_x,
-        "ADF_Value": round(p_adf, 4) if p_adf is not None else "N/A",
-        "Z_Score": round(z_score, 2),
-        "Beta": round(beta, 2),
-        "Intercept": round(intercept, 2)
-    }
-    return jsonify([details])
+    return jsonify([detail])
 
 
 @app.route("/analyze/<stock_y>/<stock_x>")
