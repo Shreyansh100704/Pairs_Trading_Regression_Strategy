@@ -160,6 +160,35 @@ If **p-value ≥ 0.05**, no trade signal is generated.
 #### **6. Backtesting**
 Historical trade P&L is calculated and visualized to evaluate the performance of each pair.
 
+---
+
+#### **7. Backtest Performance Metrics**
+
+**File:** `correlated_pairs_by_sector_backtest_results.csv`
+
+| Metric | Value | Description |
+|---|---|---|
+| **Total Trades** | **182** | Total number of trades executed in the backtest. |
+| **Winning Trades** | **89** | Number of trades that ended with a profit. |
+| **Losing Trades** | **93** | Number of trades that ended with a loss. |
+| **Win %** | **48.9%** | Percentage of trades that were profitable. |
+| **Total PnL** | **Rs. 101,616.84** | Net profit/loss from all trades. |
+| **Total Returns** | **111.77%** | Percentage gain relative to starting capital. |
+| **Expectancy** | **Rs. 558.33** | Average profit or loss expected per trade. |
+| **Avg Win / Avg Loss** | **1.85** | Ratio of average winning trade to average losing trade. |
+| **Sharpe Ratio** | **2.57** | Risk-adjusted return using standard deviation and risk-free rate. |
+| **Sortino Ratio** | **4.88** | Risk-adjusted return considering only downside volatility. |
+| **Profit Factor** | **1.77** | Total gross profit divided by total gross loss. |
+| **Max Drawdown** | **-23.2%** | Largest peak-to-trough percentage loss in equity curve. |
+
+
+**Note 1:** For each pair, if the beta-adjusted lot size for stock *Y* comes to 0, lot size of stock *Y* is considered 1 for the trade. Otherwise, the lot size for *Y* is adjusted according to the beta from the regression line.
+
+**Note 2:** For simplicity, we backtest on stock prices instead of futures and also we had not used the lot size of futures for the same. So, the terms in Rs. are as per 1 stock of *X* or *Y* whichever is lower and other adjusted for beta.
+
+**Note 2:** For performance metrics on pairs from the overall stock universe (without sector filtering), refer to the `Performance.ipynb` file.
+
+
 
 ---
 ## Files Overview
