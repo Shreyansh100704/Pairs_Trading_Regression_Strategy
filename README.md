@@ -4,6 +4,9 @@
 
 This project implements a **statistical arbitrage trading strategy** known as **Pairs Trading** using regression analysis and cointegration tests. The primary goal is to identify stock pairs whose price movements exhibit a stable long-term relationship and exploit temporary deviations from this equilibrium to generate profits.
 
+## Project Video Demonstration
+[Click here to watch the demonstration](https://drive.google.com/file/d/1IQw3pl3SS7RczseRY9P2a0jXJgzEFbB1/view?usp=drive_link)
+
 ### Key Highlights:
 - **Regression-Based Approach:**  
   Uses Ordinary Least Squares (OLS) regression to model the relationship between two stock prices (X and Y) and calculate the spread (residuals).
