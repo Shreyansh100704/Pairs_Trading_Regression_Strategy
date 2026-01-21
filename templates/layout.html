@@ -1,54 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>{% block title %}Pairs Trading Dashboard{% endblock %}</title>
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Dashboard{% endblock %}</title>
+  <!-- Tailwind CDN (keep existing or replace if you bundle locally) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  {% block head %}{% endblock %}
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    @import url('https://rsms.me/inter/inter.css');
-    .loader {
-      border:4px solid #f3f3f3;
-      border-top:4px solid #3498db;
-      border-radius:50%;
-      width:40px; height:40px;
-      animation:spin 1s linear infinite;
+    :root {
+      /* Responsive spacing scale using viewport width */
+      --vw-xxs: 0.5vw;
+      --vw-xs: 1vw;
+      --vw-sm: 1.5vw;
+      --vw-md: 2vw;
+      --vw-lg: 3vw;
+      --vw-xl: 4vw;
     }
-    @keyframes spin {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    /* Responsive container */
+    .container-vw { width: min(95vw, 1600px); margin-inline: auto; }
+
+    /* Center helpers */
+    .btn-center-wrapper { display:flex; justify-content:center; flex-wrap:wrap; gap:var(--vw-xs); }
+    .btn-center { margin-left:auto; margin-right:auto; display:inline-block; }
+
+    /* Override paddings that used px classes (keep tailwind colors/rounded) */
+    .btn-vw-sm { padding-block:var(--vw-xxs); padding-inline:var(--vw-xs); }
+    .btn-vw-md { padding-block:var(--vw-xs); padding-inline:var(--vw-md); }
+    .btn-vw-lg { padding-block:var(--vw-sm); padding-inline:var(--vw-lg); }
+
+    /* Loader spinner (unchanged; fallback if tailwind missing) */
+    .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 2.5rem; height: 2.5rem; animation: spin 1s linear infinite; }
+    @keyframes spin { 0%{transform:rotate(0deg);}100%{transform:rotate(360deg);} }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-  <div class="container mx-auto p-4 sm:p-8">
-    <header class="mb-8 pb-4 border-b border-gray-200 text-center">
-      <h1 class="text-4xl font-bold text-gray-900">Pairs Trading Dashboard</h1>
-      <p class="text-lg text-gray-600">Live Signals & Historical Analysis</p>
-    </header>
-
+<body class="bg-gray-100 min-h-screen antialiased">
+  <main class="py-8">
     {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="space-y-2 mb-6">
-        {% for category, msg in messages %}
-          <div class="p-3 rounded text-white
-            {% if category=='success' %}bg-green-600
-            {% elif category=='error' %}bg-red-600
-            {% elif category=='warning' %}bg-yellow-500
-            {% else %}bg-gray-600{% endif %}">
-            {{ msg }}
-          </div>
+      {% if messages %}
+      <div class="container-vw mb-6 space-y-2">
+        {% for category, message in messages %}
+        <div class="p-3 rounded text-sm {{ 'bg-green-100 text-green-800' if category=='success' else ('bg-red-100 text-red-800' if category=='error' else ('bg-yellow-100 text-yellow-800' if category=='warning' else 'bg-blue-100 text-blue-800')) }}">{{ message }}</div>
         {% endfor %}
       </div>
-    {% endif %}
+      {% endif %}
     {% endwith %}
 
-    <main>
+    <div class="container-vw">
       {% block content %}{% endblock %}
-    </main>
-
-    <footer class="text-center mt-12 text-sm text-gray-500">
-      <p>Pairs Trading Analysis Tool</p>
-    </footer>
-  </div>
+    </div>
+  </main>
 </body>
 </html>
